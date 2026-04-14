@@ -2,17 +2,44 @@
 
 export const dynamic = 'force-dynamic';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Eye, ShoppingCart, Send, TrendingUp, Package, Users } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
+import { getAnalyticsStats, getPopularProducts, getRecentActivity } from '@/lib/api/analytics';
 
 export default function AdminDashboard() {
+  const [statsData, setStatsData] = useState({ view: 0, cart: 0, whatsapp: 0, products: 0 });
+  const [popular, setPopular] = useState<any[]>([]);
+  const [recent, setRecent] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      getAnalyticsStats(),
+      getPopularProducts(),
+      getRecentActivity()
+    ]).then(([s, p, r]) => {
+      setStatsData(s as any);
+      setPopular(p);
+      setRecent(r);
+      setLoading(false);
+    }).catch(console.error);
+  }, []);
+
   const stats = [
-    { label: 'Vistas Totales', value: '1,284', icon: Eye, color: 'text-blue-500', bg: 'bg-blue-50' },
-    { label: 'Agregas al Carrito', value: '342', icon: ShoppingCart, color: 'text-purple-500', bg: 'bg-purple-50' },
-    { label: 'Cotizaciones Enviadas', value: '89', icon: Send, color: 'text-green-500', bg: 'bg-green-50' },
-    { label: 'Productos Activos', value: '156', icon: Package, color: 'text-orange-500', bg: 'bg-orange-50' },
+    { label: 'Vistas Totales', value: statsData.view, icon: Eye, color: 'text-blue-500', bg: 'bg-blue-50' },
+    { label: 'Agregas al Carrito', value: statsData.cart, icon: ShoppingCart, color: 'text-purple-500', bg: 'bg-purple-50' },
+    { label: 'Cotizaciones Iniciadas', value: statsData.whatsapp, icon: Send, color: 'text-green-500', bg: 'bg-green-50' },
+    { label: 'Productos Activos', value: statsData.products, icon: Package, color: 'text-orange-500', bg: 'bg-orange-50' },
   ];
+
+  if (loading) {
+    return (
+      <div className="space-y-8 animate-pulse text-neutral-500">
+        <p>Cargando datos analíticos...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -44,15 +71,18 @@ export default function AdminDashboard() {
             <TrendingUp className="h-5 w-5 text-neutral-400" />
           </div>
           <div className="space-y-6">
-            {[1, 2, 3].map((i) => (
+            {popular.length === 0 && <p className="text-sm text-neutral-500">No hay suficientes datos aún.</p>}
+            {popular.map((item, i) => (
               <div key={i} className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-lg bg-neutral-100" />
+                <div className="h-12 w-12 rounded-lg bg-neutral-100 flex items-center justify-center font-bold text-neutral-400">
+                  {i + 1}
+                </div>
                 <div className="flex-1">
-                  <p className="font-medium">Producto Ejemplo #{i}</p>
-                  <p className="text-sm text-neutral-400">Escolar / Cuadernos</p>
+                  <p className="font-medium">{item.name}</p>
+                  <p className="text-sm text-neutral-400">{item.category}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold">45</p>
+                  <p className="font-bold">{item.count}</p>
                   <p className="text-xs text-neutral-400">vistas</p>
                 </div>
               </div>
@@ -66,20 +96,23 @@ export default function AdminDashboard() {
             <Users className="h-5 w-5 text-neutral-400" />
           </div>
           <div className="space-y-6">
-             <div className="flex gap-4">
-                <div className="mt-1 h-2 w-2 rounded-full bg-blue-500" />
-                <div>
-                  <p className="text-sm font-medium">Nueva cotización via WhatsApp</p>
-                  <p className="text-xs text-neutral-400">Hace 5 minutos</p>
-                </div>
-             </div>
-             <div className="flex gap-4">
-                <div className="mt-1 h-2 w-2 rounded-full bg-purple-500" />
-                <div>
-                  <p className="text-sm font-medium">Producto "Calculadora" agregado al carrito</p>
-                  <p className="text-xs text-neutral-400">Hace 12 minutos</p>
-                </div>
-             </div>
+             {recent.length === 0 && <p className="text-sm text-neutral-500">No hay actividad reciente.</p>}
+             {recent.map((item, i) => {
+               const bgMap: Record<string, string> = { view_product: 'bg-blue-500', add_to_cart: 'bg-purple-500', send_whatsapp: 'bg-green-500' };
+               const textMap: Record<string, string> = { view_product: `Vio producto "${item.products?.name || '...'}"`, add_to_cart: `Agregó "${item.products?.name || '...'}" al carrito`, send_whatsapp: 'Inició cotización de WhatsApp' };
+               const date = new Date(item.created_at);
+               const timeString = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+
+               return (
+                 <div key={i} className="flex gap-4">
+                    <div className={`mt-1 h-2 w-2 rounded-full ${bgMap[item.event_type] || 'bg-gray-500'}`} />
+                    <div>
+                      <p className="text-sm font-medium">{textMap[item.event_type] || 'Acción desconocida'}</p>
+                      <p className="text-xs text-neutral-400">{date.toLocaleDateString()} a las {timeString}</p>
+                    </div>
+                 </div>
+               );
+             })}
           </div>
         </Card>
       </div>
