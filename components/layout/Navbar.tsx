@@ -16,10 +16,10 @@ export const Navbar = () => {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-3">
-            <div className="relative h-10 w-10">
-              <img src="/logo.jpeg" alt="Logo" className="h-full w-full object-contain" />
+            <div className="relative h-14 w-14 sm:h-16 sm:w-16 transition-transform hover:scale-105">
+              <img src="/logo.jpeg" alt="Logo" className="h-full w-full object-contain rounded-xl shadow-sm" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-primary">Librería Crayola</span>
+            <span className="text-2xl font-bold tracking-tight text-primary sm:text-3xl">Librería Crayola</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-6">

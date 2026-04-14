@@ -17,8 +17,8 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="inline-flex items-center rounded-full bg-primary/10 px-6 py-2 text-sm font-semibold text-primary mb-8">
-              Catálogo Actualizado 2024
+            <span className="inline-flex items-center rounded-full bg-primary/10 px-6 py-2 text-sm font-bold text-primary mb-8 border border-primary/20 shadow-sm animate-pulse">
+              Catálogo Actualizado 
             </span>
             <h1 className="text-5xl font-extrabold tracking-tight text-foreground sm:text-7xl mb-8">
               Tu papelería de confianza, <br />
@@ -43,8 +43,15 @@ export default function HomePage() {
         </div>
 
         {/* Decorative elements */}
-        <div className="absolute top-0 -z-10 h-full w-full opacity-30 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] bg-primary/20 blur-[120px] rounded-full" />
+        <div className="absolute top-0 -z-10 h-full w-full opacity-40 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 h-[500px] w-[500px] bg-primary/30 blur-[120px] rounded-full animate-blob" />
+          <div className="absolute top-1/2 right-1/4 h-[400px] w-[400px] bg-blue-400/20 blur-[100px] rounded-full animate-blob animation-delay-2000" />
+          <div className="absolute bottom-1/4 left-1/3 h-[600px] w-[600px] bg-indigo-300/20 blur-[140px] rounded-full animate-blob animation-delay-4000" />
+          
+          {/* Large background logo */}
+          <div className="absolute -right-20 top-1/2 -translate-y-1/2 opacity-[0.05] grayscale rotate-12">
+            <img src="/logo.jpeg" alt="" className="h-[800px] w-[800px] object-contain" />
+          </div>
         </div>
       </section>
 
