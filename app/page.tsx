@@ -52,7 +52,7 @@ export default function HomePage() {
           
           {/* Large background logo */}
           <div className="absolute -right-20 top-1/2 -translate-y-1/2 opacity-[0.05] grayscale rotate-12">
-            <img src="/logo.jpeg" alt="" className="h-[800px] w-[800px] object-contain" />
+            <img src="/LogoGrande.png" alt="" className="h-[800px] w-[800px] object-contain" />
           </div>
         </div>
       </section>
