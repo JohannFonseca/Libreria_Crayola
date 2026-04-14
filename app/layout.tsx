@@ -5,6 +5,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Catálogo - Librería Crayola",
   description: "Explora y cotiza nuestros productos de oficina y papelería.",
+  icons: {
+    icon: '/logo.jpeg',
+    shortcut: '/logo.jpeg',
+    apple: '/logo.jpeg',
+  }
 };
 
 import { CartProvider } from "@/context/CartContext";
