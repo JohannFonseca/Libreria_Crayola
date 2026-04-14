@@ -6,9 +6,9 @@ export const metadata: Metadata = {
   title: "Catálogo - Librería Crayola",
   description: "Explora y cotiza nuestros productos de oficina y papelería.",
   icons: {
-    icon: '/LogoGrande.png',
-    shortcut: '/LogoGrande.png',
-    apple: '/LogoGrande.png',
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
   }
 };
 
