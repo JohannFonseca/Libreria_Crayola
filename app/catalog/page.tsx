@@ -9,49 +9,29 @@ import { ProductDetail } from '@/components/catalog/ProductDetail';
 import { Button } from '@/components/ui/Button';
 import { Product, Category } from '@/lib/types';
 import { useCart } from '@/context/CartContext';
-
-// Mock data for initial development
-const MOCK_PRODUCTS: Product[] = [
-  {
-    id: '1',
-    name: 'Cuaderno Profesional',
-    description: 'Cuaderno de 100 hojas, pasta dura, ideal para estudiantes y oficina.',
-    category_id: 'cat1',
-    image_url: '',
-    created_at: new Date().toISOString(),
-    colors: [
-      { id: 'c1', product_id: '1', color_name: 'Azul' },
-      { id: 'c2', product_id: '1', color_name: 'Rojo' },
-      { id: 'c3', product_id: '1', color_name: 'Verde' },
-    ]
-  },
-  {
-    id: '2',
-    name: 'Bolígrafo Gel Premium',
-    description: 'Escritura suave y precisa. Secado rápido y diseño ergonómico.',
-    category_id: 'cat2',
-    image_url: '',
-    created_at: new Date().toISOString(),
-    colors: [
-      { id: 'c4', product_id: '2', color_name: 'Negro' },
-      { id: 'c5', product_id: '2', color_name: 'Azul' },
-    ]
-  },
-  {
-    id: '3',
-    name: 'Calculadora Científica',
-    description: 'Más de 240 funciones. Pantalla de 2 líneas. Ideal para ingeniería.',
-    category_id: 'cat3',
-    image_url: '',
-    created_at: new Date().toISOString(),
-  }
-];
+import { getProducts } from '@/lib/api/products';
 
 export default function CatalogPage() {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
-  const [products, setProducts] = React.useState<Product[]>(MOCK_PRODUCTS);
+  const [products, setProducts] = React.useState<Product[]>([]);
+  const [loading, setLoading] = React.useState(true);
   const { addItem } = useCart();
+
+  React.useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const data = await getProducts();
+      setProducts(data || []);
+    } catch (e) {
+      console.error('Error loading catalog:', e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredProducts = products.filter(p => 
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

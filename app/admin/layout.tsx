@@ -5,17 +5,37 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, Package, Tag, BarChart3, LogOut, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { supabase } from '@/lib/supabase';
+import { getSession, logoutAdmin } from '@/lib/api/auth';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const isLoginPage = pathname === '/admin/login';
+  const [checking, setChecking] = React.useState(true);
+
+  React.useEffect(() => {
+    const checkSession = async () => {
+      if (isLoginPage) {
+        setChecking(false);
+        return;
+      }
+      
+      const session = await getSession();
+      if (!session) {
+        router.push('/admin/login');
+      } else {
+        setChecking(false);
+      }
+    };
+    
+    checkSession();
+  }, [isLoginPage, router]);
 
   if (isLoginPage) return <>{children}</>;
+  if (checking) return <div className="flex min-h-screen items-center justify-center">Cargando...</div>;
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await logoutAdmin();
     router.push('/admin/login');
   };
 

@@ -6,25 +6,31 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Product } from '@/lib/types';
-import { supabase } from '@/lib/supabase';
+import { getProducts, deleteProduct } from '@/lib/api/products';
+import { ProductModal } from '@/components/admin/ProductModal';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = React.useState<Product[]>([]);
+  const [categories, setCategories] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [searchTerm, setSearchTerm] = React.useState('');
+  const [showModal, setShowModal] = React.useState(false);
+  const [editingProduct, setEditingProduct] = React.useState<Product | undefined>(undefined);
 
   React.useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    const { data } = await supabase.from('categories').select('*');
+    setCategories(data || []);
+  };
 
   const fetchProducts = async () => {
     try {
-      const { data, error } = await supabase
-        .from('products')
-        .select(`*, categories(name)`)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
+      const data = await getProducts();
       setProducts(data || []);
     } catch (e) {
       console.error('Error fetching products:', e);
@@ -37,8 +43,7 @@ export default function AdminProductsPage() {
     if (!confirm('¿Estás seguro de eliminar este producto?')) return;
     
     try {
-      const { error } = await supabase.from('products').delete().eq('id', id);
-      if (error) throw error;
+      await deleteProduct(id);
       setProducts(products.filter(p => p.id !== id));
     } catch (e) {
       alert('Error eliminando producto');
@@ -56,11 +61,26 @@ export default function AdminProductsPage() {
           <h1 className="text-3xl font-bold tracking-tight">Gestión de Productos</h1>
           <p className="text-neutral-500">Crea, edita y elimina productos de tu catálogo público.</p>
         </div>
-        <Button className="gap-2 rounded-xl">
+        <Button 
+          className="gap-2 rounded-xl"
+          onClick={() => {
+            setEditingProduct(undefined);
+            setShowModal(true);
+          }}
+        >
           <Plus className="h-5 w-5" />
           Nuevo Producto
         </Button>
       </div>
+
+      {showModal && (
+        <ProductModal
+          product={editingProduct}
+          categories={categories}
+          onClose={() => setShowModal(false)}
+          onSuccess={fetchProducts}
+        />
+      )}
 
       <Card className="p-0 border-neutral-200 overflow-hidden">
         <div className="p-6 border-b border-neutral-200 bg-neutral-50/50 flex flex-col md:flex-row gap-4 justify-between">
@@ -117,7 +137,15 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="sm" className="p-2 opacity-0 group-hover:opacity-100">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="p-2 opacity-0 group-hover:opacity-100"
+                          onClick={() => {
+                            setEditingProduct(product);
+                            setShowModal(true);
+                          }}
+                        >
                           <Edit2 className="h-4 w-4" />
                         </Button>
                         <Button 

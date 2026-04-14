@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { loginAdmin } from '@/lib/api/auth';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 
@@ -18,16 +18,12 @@ export default function AdminLoginPage() {
     setLoading(true);
     setError(null);
 
-    const { error: loginError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (loginError) {
+    try {
+      await loginAdmin(email, password);
+      router.push('/admin/dashboard');
+    } catch (loginError: any) {
       setError('Credenciales inválidas. Intenta de nuevo.');
       setLoading(false);
-    } else {
-      router.push('/admin/dashboard');
     }
   };
 
