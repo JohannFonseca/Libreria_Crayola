@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button';
 import { Product, Category } from '@/lib/types';
 import { useCart } from '@/context/CartContext';
 import { getProducts } from '@/lib/api/products';
+import { trackEvent } from '@/lib/api/analytics';
 
 export default function CatalogPage() {
   const [searchTerm, setSearchTerm] = React.useState('');
@@ -39,8 +40,14 @@ export default function CatalogPage() {
   );
 
   const handleAddToCart = (product: Product, color?: string) => {
+    trackEvent(product.id, 'add_to_cart');
     addItem(product, color);
     setSelectedProduct(null);
+  };
+
+  const handleViewProduct = (product: Product) => {
+    trackEvent(product.id, 'view_product');
+    setSelectedProduct(product);
   };
 
   return (
@@ -78,7 +85,7 @@ export default function CatalogPage() {
           <ProductCard
             key={product.id}
             product={product}
-            onViewDetail={setSelectedProduct}
+            onViewDetail={handleViewProduct}
             onAddToCart={(p) => handleAddToCart(p)}
           />
         ))}

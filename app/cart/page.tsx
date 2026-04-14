@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/Badge';
 import { useCart } from '@/context/CartContext';
 import { generateWhatsAppLink } from '@/lib/whatsapp-helper';
 import { generatePDF } from '@/lib/pdf-generator';
+import { trackEvent } from '@/lib/api/analytics';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart, totalItems } = useCart();
@@ -105,7 +106,10 @@ export default function CartPage() {
             <div className="space-y-4">
               <Button 
                 className="w-full gap-3 py-4" 
-                onClick={() => window.location.href = generateWhatsAppLink(items)}
+                onClick={() => {
+                  items.forEach(item => trackEvent(item.id, 'send_whatsapp'));
+                  window.location.href = generateWhatsAppLink(items);
+                }}
               >
                 <Send className="h-5 w-5" />
                 Enviar a WhatsApp
