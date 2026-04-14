@@ -112,7 +112,15 @@ export default function CatalogPage() {
         ))}
       </div>
 
-      {filteredProducts.length === 0 && (
+      {loading ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center animate-pulse">
+          <div className="mb-4 rounded-full bg-primary/10 p-6">
+            <Search className="h-10 w-10 text-primary" />
+          </div>
+          <h3 className="text-xl font-semibold text-neutral-900">Cargando catálogo...</h3>
+          <p className="mt-2 text-neutral-500">Preparando los mejores productos para ti.</p>
+        </div>
+      ) : filteredProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <div className="mb-4 rounded-full bg-neutral-100 p-6">
             <Search className="h-10 w-10 text-neutral-400" />
@@ -120,7 +128,7 @@ export default function CatalogPage() {
           <h3 className="text-xl font-semibold text-neutral-900">No encontramos resultados</h3>
           <p className="mt-2 text-neutral-500">Intenta buscar con otros términos o filtros.</p>
         </div>
-      )}
+      ) : null}
 
       {/* Product Detail Modal */}
       {selectedProduct && (

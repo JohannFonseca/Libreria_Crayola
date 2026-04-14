@@ -33,9 +33,11 @@ export const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="hidden sm:flex">
-            <Search className="h-5 w-5" />
-          </Button>
+          <Link href="/catalog">
+            <Button variant="ghost" size="sm" className="hidden sm:flex">
+              <Search className="h-5 w-5" />
+            </Button>
+          </Link>
           
           <Link href="/cart">
             <Button variant="ghost" size="sm" className="relative">

@@ -35,9 +35,11 @@ export default function HomePage() {
                   <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <Button variant="ghost" className="w-full sm:w-auto px-8 py-6 text-lg text-neutral-600">
-                Sobre nosotros
-              </Button>
+              <a href="#sobre-nosotros">
+                <Button variant="ghost" className="w-full sm:w-auto px-8 py-6 text-lg text-neutral-600">
+                  Sobre nosotros
+                </Button>
+              </a>
             </div>
           </motion.div>
         </div>
@@ -84,6 +86,26 @@ export default function HomePage() {
                 <p className="text-neutral-500">{f.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Sobre Nosotros */}
+      <section id="sobre-nosotros" className="bg-neutral-50 py-24 border-b border-neutral-100">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-6">
+            Sobre Nosotros
+          </h2>
+          <div className="mx-auto max-w-3xl">
+            <p className="text-lg text-neutral-600 mb-6 leading-relaxed">
+              Somos una empresa 100% costarricense, <strong className="text-primary font-semibold">nacida con orgullo en Bagaces, Guanacaste</strong>. 
+              Nuestra misión es ofrecerte los mejores suministros de oficina, papelería y artículos escolares con una atención 
+              cálida y personalizada, al verdadero estilo guanacasteco.
+            </p>
+            <p className="text-lg text-neutral-600 leading-relaxed">
+              Nos esforzamos por brindarte calidad, rapidez en nuestro servicio 
+              y la confianza de que siempre encontrarás lo que necesitas para tu hogar, escuela o negocio.
+            </p>
           </div>
         </div>
       </section>
