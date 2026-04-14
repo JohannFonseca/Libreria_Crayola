@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Eye, ShoppingCart, Send, TrendingUp, Package, Users } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { getAnalyticsStats, getPopularProducts, getRecentActivity } from '@/lib/api/analytics';

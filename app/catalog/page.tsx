@@ -7,7 +7,7 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 import { ProductCard } from '@/components/catalog/ProductCard';
 import { ProductDetail } from '@/components/catalog/ProductDetail';
 import { Button } from '@/components/ui/Button';
-import { Product, Category } from '@/lib/types';
+import { Product } from '@/lib/types';
 import { useCart } from '@/context/CartContext';
 import { getProducts } from '@/lib/api/products';
 import { trackEvent } from '@/lib/api/analytics';
