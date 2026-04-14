@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { ProductCard } from '@/components/catalog/ProductCard';
 import { ProductDetail } from '@/components/catalog/ProductDetail';
@@ -13,10 +13,11 @@ import { getProducts } from '@/lib/api/products';
 import { trackEvent } from '@/lib/api/analytics';
 
 export default function CatalogPage() {
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
-  const [products, setProducts] = React.useState<Product[]>([]);
-  const [loading, setLoading] = React.useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
 
   React.useEffect(() => {
@@ -34,10 +35,17 @@ export default function CatalogPage() {
     }
   };
 
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const categoriesList = useMemo(() => {
+    const cats = new Set(products.map(p => p.categories?.name).filter(Boolean));
+    return ['Todas', ...Array.from(cats)] as string[];
+  }, [products]);
+
+  const filteredProducts = products.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          p.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'Todas' || p.categories?.name === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleAddToCart = (product: Product, color?: string) => {
     trackEvent(product.id, 'add_to_cart');
@@ -62,8 +70,8 @@ export default function CatalogPage() {
       </header>
 
       {/* Filters & Search */}
-      <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-center">
-        <div className="relative flex-1">
+      <div className="mb-12 flex flex-col gap-4">
+        <div className="relative w-full md:w-1/2">
           <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
           <input
             type="text"
@@ -73,10 +81,23 @@ export default function CatalogPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <Button variant="outline" className="gap-2 rounded-full px-6">
-          <SlidersHorizontal className="h-4 w-4" />
-          Filtros
-        </Button>
+        
+        {/* Categories as filter chips */}
+        {categoriesList.length > 1 && (
+          <div className="flex flex-wrap items-center gap-2 mt-2">
+            <SlidersHorizontal className="h-4 w-4 mr-2 text-neutral-500" />
+            {categoriesList.map(cat => (
+              <Button
+                key={cat}
+                variant={selectedCategory === cat ? 'default' : 'outline'}
+                className="rounded-full px-4 text-sm h-8"
+                onClick={() => setSelectedCategory(cat)}
+              >
+                {cat}
+              </Button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Product Grid */}

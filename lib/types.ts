@@ -13,6 +13,7 @@ export interface Product {
   image_url: string;
   created_at: string;
   colors?: ProductColor[];
+  categories?: Category;
 }
 
 export interface ProductColor {

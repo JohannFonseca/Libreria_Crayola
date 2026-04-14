@@ -34,7 +34,7 @@ export default function RootLayout({
                 <div className="flex flex-col items-center md:items-start gap-3">
                   <div className="font-semibold text-primary">Ubicaciones</div>
                   <a href="https://maps.app.goo.gl/gmvax4dDDtRWG1AZ7" target="_blank" rel="noopener noreferrer" className="text-sm text-neutral-500 hover:text-primary transition-colors flex items-center gap-2">
-                    📍 Liberia (Frente a Correos de Costa Rica)
+                    📍 Liberia
                   </a>
                   <span className="text-sm text-neutral-400 cursor-help flex items-center gap-2" title="Próximamente">
                     📍 Bagaces (Próximamente)
