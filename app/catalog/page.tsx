@@ -89,7 +89,7 @@ export default function CatalogPage() {
             {categoriesList.map(cat => (
               <Button
                 key={cat}
-                variant={selectedCategory === cat ? 'default' : 'outline'}
+                variant={selectedCategory === cat ? 'primary' : 'outline'}
                 className="rounded-full px-4 text-sm h-8"
                 onClick={() => setSelectedCategory(cat)}
               >
