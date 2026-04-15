@@ -3,7 +3,8 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { CartItem, Product } from '@/lib/types';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Check, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 interface CartContextType {
   items: CartItem[];
@@ -19,7 +20,8 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [lastAddedItem, setLastAddedItem] = useState<{name: string, image?: string} | null>(null);
+  const [showToast, setShowToast] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load from localStorage
@@ -59,9 +61,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       return [...prev, { ...product, quantity: 1, selectedColor: color }];
     });
 
-    setToastMessage(`Agregado: ${product.name}`);
+    setLastAddedItem({ name: product.name, image: product.image_url });
+    setShowToast(true);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setToastMessage(null), 3000);
+    timeoutRef.current = setTimeout(() => setShowToast(false), 4000);
   };
 
   const removeItem = (id: string, color?: string) => {
@@ -94,17 +97,31 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
 
       <AnimatePresence>
-        {toastMessage && (
+        {showToast && lastAddedItem && (
           <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="fixed bottom-24 right-6 z-50 flex items-center gap-3 rounded-2xl bg-neutral-900/90 py-3 pl-4 pr-5 text-sm font-medium text-white shadow-2xl backdrop-blur-md sm:bottom-10 sm:right-10"
+            exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+            className="fixed left-4 right-4 top-6 z-[101] mx-auto flex max-w-sm items-center justify-between gap-4 rounded-2xl border border-white/20 bg-white/90 p-4 shadow-[0_20px_40px_rgba(0,0,0,0.1)] backdrop-blur-xl sm:bottom-10 sm:left-auto sm:right-10 sm:top-auto sm:max-w-md"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-primary">
-              <ShoppingCart className="h-4 w-4" />
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Check className="h-6 w-6" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-neutral-900">Agregado con éxito</p>
+                <p className="truncate text-xs text-neutral-500">{lastAddedItem.name}</p>
+              </div>
             </div>
-            <p className="max-w-[200px] truncate">{toastMessage}</p>
+            
+            <Link 
+              href="/cart"
+              onClick={() => setShowToast(false)}
+              className="flex items-center gap-1 rounded-lg bg-primary px-3 py-2 text-xs font-bold text-white transition-all hover:bg-primary/90 active:scale-95"
+            >
+              Ver Carrito
+              <ArrowRight className="h-3 w-3" />
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
