@@ -57,9 +57,9 @@ export default function RootLayout({
                   <a href="https://maps.app.goo.gl/gmvax4dDDtRWG1AZ7" target="_blank" rel="noopener noreferrer" className="text-sm text-neutral-500 hover:text-primary transition-colors flex items-center gap-2">
                     📍 Liberia
                   </a>
-                  <span className="text-sm text-neutral-400 cursor-help flex items-center gap-2" title="Próximamente">
-                    📍 Bagaces (Próximamente)
-                  </span>
+                  <a href="https://maps.app.goo.gl/eoJA4t8FUNzwXYr46" target="_blank" rel="noopener noreferrer" className="text-sm text-neutral-500 hover:text-primary transition-colors flex items-center gap-2">
+                    📍 Bagaces
+                  </a>
                 </div>
 
                 <div className="text-sm text-neutral-500 self-center">
