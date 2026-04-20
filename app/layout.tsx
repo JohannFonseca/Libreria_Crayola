@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -81,6 +82,7 @@ export default function RootLayout({
             </svg>
           </a>
         </CartProvider>
+        <Analytics />
       </body>
     </html>
   );
