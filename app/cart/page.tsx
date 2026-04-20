@@ -2,17 +2,18 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Trash2, Plus, Minus, FileText, Send, ArrowLeft } from 'lucide-react';
+import { Trash2, Plus, Minus, FileText, Send, ArrowLeft, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { useCart } from '@/context/CartContext';
-import { generateWhatsAppLink } from '@/lib/whatsapp-helper';
+import { generateWhatsAppLink, BRANCHES, BranchId } from '@/lib/whatsapp-helper';
 import { generatePDF } from '@/lib/pdf-generator';
 import { trackEvent } from '@/lib/api/analytics';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart, totalItems } = useCart();
+  const [selectedBranch, setSelectedBranch] = React.useState<BranchId>('liberia');
 
   if (totalItems === 0) {
     return (
@@ -103,12 +104,34 @@ export default function CartPage() {
               <span className="text-2xl font-bold">{totalItems}</span>
             </div>
 
+            <div className="mb-6 space-y-3">
+              <label className="text-sm font-semibold text-neutral-600 flex items-center gap-2">
+                <MapPin className="h-4 w-4" />
+                Seleccionar sucursal
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {(Object.keys(BRANCHES) as BranchId[]).map((id) => (
+                  <button
+                    key={id}
+                    onClick={() => setSelectedBranch(id)}
+                    className={`px-3 py-2 text-sm rounded-lg border transition-all ${
+                      selectedBranch === id
+                        ? 'bg-primary text-white border-primary shadow-sm'
+                        : 'bg-white text-neutral-600 border-neutral-200 hover:border-primary/50'
+                    }`}
+                  >
+                    {BRANCHES[id].name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="space-y-4">
               <Button 
                 className="w-full gap-3 py-4" 
                 onClick={() => {
                   items.forEach(item => trackEvent(item.id, 'send_whatsapp'));
-                  window.location.href = generateWhatsAppLink(items);
+                  window.location.href = generateWhatsAppLink(items, selectedBranch);
                 }}
               >
                 <Send className="h-5 w-5" />
