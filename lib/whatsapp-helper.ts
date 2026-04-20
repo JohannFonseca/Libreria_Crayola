@@ -17,16 +17,16 @@ export const generateWhatsAppLink = (items: CartItem[], branchId: BranchId = 'li
   const branch = BRANCHES[branchId];
   const phoneNumber = branch.phone;
   
-  let message = '🛍️ *Cotización - Librería Crayola* 🛍️\n\n';
+  let message = '*Cotización - Librería Crayola*\n\n';
   message += 'Hola, me gustaría solicitar una cotización para los siguientes productos:\n\n';
   message += '-------------------------------------------\n';
-  message += '📝 *DETALLE DEL PEDIDO:*\n\n';
+  message += 'DETALLE DEL PEDIDO:\n\n';
 
   items.forEach((item) => {
-    message += `✅ *${item.name}*\n`;
-    message += `   🔹 Cantidad: ${item.quantity}\n`;
+    message += `- *${item.name}*\n`;
+    message += `  Cantidad: ${item.quantity}\n`;
     if (item.selectedColor) {
-      message += `   🎨 Color: ${item.selectedColor}\n`;
+      message += `  Color: ${item.selectedColor}\n`;
     }
     message += '\n';
   });
@@ -34,11 +34,12 @@ export const generateWhatsAppLink = (items: CartItem[], branchId: BranchId = 'li
   const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
 
   message += '-------------------------------------------\n\n';
-  message += `🔢 *Total de artículos:* ${totalItems}\n`;
-  message += `📍 *Sucursal:* ${branch.name}\n\n`;
+  message += `Total de artículos: ${totalItems}\n`;
+  message += `Sucursal: ${branch.name}\n\n`;
   message += 'Muchas gracias.';
 
   const encodedMessage = encodeURIComponent(message);
   return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 };
+
 
