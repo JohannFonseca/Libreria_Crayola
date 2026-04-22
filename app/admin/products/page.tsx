@@ -165,7 +165,7 @@ export default function AdminProductsPage() {
                 <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-20">Img</th>
                 <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider">Producto</th>
                 <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-40">Categoría</th>
-                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-36">Audiencia</th>
+                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-40">Audiencia</th>
                 <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-36">Precio (₡)</th>
                 <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-24">Destacar</th>
                 <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-32">Web</th>

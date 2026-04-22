@@ -68,11 +68,12 @@ export function InventoryRow({ product, categories, onUpdate, onEdit, onDelete }
       <td className="px-6 py-4">
         <select 
           className="bg-transparent border border-transparent hover:border-neutral-200 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"
-          value={product.tipo_cliente || 'normal'}
-          onChange={(e) => handleUpdate({ tipo_cliente: e.target.value as 'normal' | 'empresa' })}
+          value={product.tipo_cliente || 'ambos'}
+          onChange={(e) => handleUpdate({ tipo_cliente: e.target.value as 'normal' | 'empresa' | 'ambos' })}
         >
-          <option value="normal">Normal</option>
-          <option value="empresa">Empresa</option>
+          <option value="ambos">Ambos (Todos)</option>
+          <option value="normal">Solo Normal</option>
+          <option value="empresa">Solo Empresa</option>
         </select>
       </td>
       <td className="px-6 py-4">

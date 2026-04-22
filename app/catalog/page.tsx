@@ -50,7 +50,7 @@ export default function CatalogPage() {
     const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           p.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'Todas' || p.categories?.name === selectedCategory;
-    const matchesClient = selectedClientType === 'todos' || p.tipo_cliente === selectedClientType;
+    const matchesClient = selectedClientType === 'todos' || !p.tipo_cliente || p.tipo_cliente === 'ambos' || p.tipo_cliente === selectedClientType;
     return matchesSearch && matchesCategory && matchesClient;
   });
 

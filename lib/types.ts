@@ -12,7 +12,7 @@ export interface Product {
   category_id: string;
   image_url: string;
   precio_venta: number | null;
-  tipo_cliente: 'normal' | 'empresa';
+  tipo_cliente: 'normal' | 'empresa' | 'ambos';
   visible_en_web: boolean;
   destacado: boolean;
   sort_order: number;

@@ -14,7 +14,7 @@ CREATE TABLE products (
   category_id UUID REFERENCES categories(id) ON DELETE SET NULL,
   image_url TEXT,
   precio_venta NUMERIC(10,2) DEFAULT NULL,
-  tipo_cliente TEXT CHECK (tipo_cliente IN ('normal', 'empresa')) DEFAULT 'normal',
+  tipo_cliente TEXT CHECK (tipo_cliente IN ('normal', 'empresa', 'ambos')) DEFAULT 'ambos',
   visible_en_web BOOLEAN DEFAULT false,
   destacado BOOLEAN DEFAULT false,
   sort_order INT DEFAULT 0,

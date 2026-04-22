@@ -20,7 +20,7 @@ export const ProductModal = ({ product, categories, onClose, onSuccess }: Produc
   const [description, setDescription] = React.useState(product?.description || '');
   const [categoryId, setCategoryId] = React.useState(product?.category_id || '');
   const [precioVenta, setPrecioVenta] = React.useState(product?.precio_venta?.toString() || '');
-  const [tipoCliente, setTipoCliente] = React.useState<'normal' | 'empresa'>(product?.tipo_cliente || 'normal');
+  const [tipoCliente, setTipoCliente] = React.useState<'normal' | 'empresa' | 'ambos'>(product?.tipo_cliente || 'ambos');
   const [visible, setVisible] = React.useState(product?.visible_en_web || false);
   const [destacado, setDestacado] = React.useState(product?.destacado || false);
   const [imageFile, setImageFile] = React.useState<File | null>(null);
@@ -118,14 +118,15 @@ export const ProductModal = ({ product, categories, onClose, onSuccess }: Produc
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Tipo de Cliente</label>
+                  <label className="block text-sm font-medium mb-1">Tipo de Cliente (Opcional)</label>
                   <select
                     className="w-full rounded-xl border border-neutral-200 px-4 py-2 focus:border-primary focus:outline-none bg-white"
                     value={tipoCliente}
-                    onChange={(e) => setTipoCliente(e.target.value as 'normal' | 'empresa')}
+                    onChange={(e) => setTipoCliente(e.target.value as 'normal' | 'empresa' | 'ambos')}
                   >
-                    <option value="normal">Normal</option>
-                    <option value="empresa">Empresa</option>
+                    <option value="ambos">Ambos (Público General)</option>
+                    <option value="normal">Solo Normal</option>
+                    <option value="empresa">Solo Empresa</option>
                   </select>
                 </div>
                 
