@@ -1,13 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Plus, Search, Edit2, Trash2, MoreVertical, ExternalLink } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
 import { Product } from '@/lib/types';
-import { getProducts, deleteProduct } from '@/lib/api/products';
+import { getAllProductsAdmin, deleteProduct, updateProductInline } from '@/lib/api/products';
 import { ProductModal } from '@/components/admin/ProductModal';
+import { InventoryRow } from '@/components/admin/InventoryRow';
 import { supabase } from '@/lib/supabaseClient';
 
 export default function AdminProductsPage() {
@@ -15,6 +15,8 @@ export default function AdminProductsPage() {
   const [categories, setCategories] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [searchTerm, setSearchTerm] = React.useState('');
+  const [statusFilter, setStatusFilter] = React.useState<'todos' | 'visibles' | 'ocultos'>('todos');
+  const [clientFilter, setClientFilter] = React.useState<'todos' | 'normal' | 'empresa'>('todos');
   const [showModal, setShowModal] = React.useState(false);
   const [editingProduct, setEditingProduct] = React.useState<Product | undefined>(undefined);
 
@@ -30,7 +32,7 @@ export default function AdminProductsPage() {
 
   const fetchProducts = async () => {
     try {
-      const data = await getProducts();
+      const data = await getAllProductsAdmin();
       setProducts(data || []);
     } catch (e) {
       console.error('Error fetching products:', e);
@@ -50,19 +52,42 @@ export default function AdminProductsPage() {
     }
   };
 
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleInlineUpdate = async (id: string, updates: Partial<Product>) => {
+    try {
+      const updated = await updateProductInline(id, updates);
+      setProducts(products.map(p => p.id === id ? { ...p, ...updates } : p));
+    } catch (e) {
+      console.error('Error updating product inline', e);
+      alert('Error al actualizar el producto');
+      // Revert if error
+      fetchProducts();
+    }
+  };
+
+  const filteredProducts = products.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    let matchesStatus = true;
+    if (statusFilter === 'visibles') matchesStatus = p.visible_en_web === true;
+    if (statusFilter === 'ocultos') matchesStatus = p.visible_en_web === false;
+
+    let matchesClient = true;
+    if (clientFilter !== 'todos') matchesClient = p.tipo_cliente === clientFilter;
+
+    return matchesSearch && matchesStatus && matchesClient;
+  });
+
+  const visiblesCount = products.filter(p => p.visible_en_web).length;
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Gestión de Productos</h1>
-          <p className="text-neutral-500">Crea, edita y elimina productos de tu catálogo público.</p>
+          <h1 className="text-3xl font-bold tracking-tight">Inventario de Productos</h1>
+          <p className="text-neutral-500 mt-1">Activa y configura qué productos se muestran en el catálogo público.</p>
         </div>
         <Button 
-          className="gap-2 rounded-xl"
+          className="gap-2 rounded-xl h-11 px-6 shadow-sm"
           onClick={() => {
             setEditingProduct(undefined);
             setShowModal(true);
@@ -71,6 +96,21 @@ export default function AdminProductsPage() {
           <Plus className="h-5 w-5" />
           Nuevo Producto
         </Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="p-6 border-neutral-200">
+          <div className="text-sm font-medium text-neutral-500 mb-1">Total en Inventario</div>
+          <div className="text-3xl font-bold">{products.length}</div>
+        </Card>
+        <Card className="p-6 border-neutral-200 bg-green-50/50 border-green-100">
+          <div className="text-sm font-medium text-green-600 mb-1">Visibles en Web</div>
+          <div className="text-3xl font-bold text-green-700">{visiblesCount}</div>
+        </Card>
+        <Card className="p-6 border-neutral-200">
+          <div className="text-sm font-medium text-neutral-500 mb-1">Ocultos</div>
+          <div className="text-3xl font-bold text-neutral-700">{products.length - visiblesCount}</div>
+        </Card>
       </div>
 
       {showModal && (
@@ -82,83 +122,85 @@ export default function AdminProductsPage() {
         />
       )}
 
-      <Card className="p-0 border-neutral-200 overflow-hidden">
-        <div className="p-6 border-b border-neutral-200 bg-neutral-50/50 flex flex-col md:flex-row gap-4 justify-between">
-          <div className="relative max-w-md w-full">
-            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+      <Card className="p-0 border-neutral-200 overflow-hidden shadow-sm">
+        <div className="p-4 sm:p-6 border-b border-neutral-200 bg-white flex flex-col md:flex-row gap-4 justify-between items-center">
+          <div className="relative w-full md:w-96">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
             <input
               type="text"
               placeholder="Buscar por nombre..."
-              className="w-full rounded-full border border-neutral-200 bg-white py-2.5 pl-12 pr-4 text-sm focus:border-primary focus:outline-none"
+              className="w-full rounded-lg border border-neutral-300 bg-white py-2 pl-9 pr-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 focus:outline-none transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
+          
+          <div className="flex w-full md:w-auto gap-3 flex-wrap">
+            <select
+              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none min-w-[140px]"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as any)}
+            >
+              <option value="todos">Todos los estados</option>
+              <option value="visibles">🔴 Visibles en Web</option>
+              <option value="ocultos">⚪ Ocultos</option>
+            </select>
+
+            <select
+              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none min-w-[140px]"
+              value={clientFilter}
+              onChange={(e) => setClientFilter(e.target.value as any)}
+            >
+              <option value="todos">Cualquier Cliente</option>
+              <option value="normal">👤 Normal</option>
+              <option value="empresa">🏢 Empresa</option>
+            </select>
+          </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto min-h-[400px]">
+          <table className="w-full text-left border-collapse min-w-[1000px]">
             <thead>
-              <tr className="border-b border-neutral-200 bg-neutral-50/30">
-                <th className="px-6 py-4 text-sm font-semibold text-neutral-600">Imagen</th>
-                <th className="px-6 py-4 text-sm font-semibold text-neutral-600">Nombre</th>
-                <th className="px-6 py-4 text-sm font-semibold text-neutral-600">Categoría</th>
-                <th className="px-6 py-4 text-sm font-semibold text-neutral-600">Fecha</th>
-                <th className="px-6 py-4 text-sm font-semibold text-neutral-600 text-right">Acciones</th>
+              <tr className="border-b border-neutral-200 bg-neutral-50/80 text-neutral-500">
+                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-20">Img</th>
+                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider">Producto</th>
+                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-40">Categoría</th>
+                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-36">Audiencia</th>
+                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-36">Precio (₡)</th>
+                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-24">Destacar</th>
+                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-32">Web</th>
+                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-right w-24">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100">
+            <tbody className="divide-y divide-neutral-100 bg-white">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-20 text-center text-neutral-400">
-                    Cargando productos...
+                  <td colSpan={8} className="px-6 py-32 text-center text-neutral-400">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="h-8 w-8 rounded-full border-4 border-primary/20 border-t-primary animate-spin"></div>
+                      Cargando inventario...
+                    </div>
                   </td>
                 </tr>
               ) : filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-20 text-center text-neutral-400">
-                    No hay productos todavía.
+                  <td colSpan={8} className="px-6 py-32 text-center text-neutral-400">
+                    No se encontraron productos con estos filtros.
                   </td>
                 </tr>
               ) : (
                 filteredProducts.map((product) => (
-                  <tr key={product.id} className="hover:bg-neutral-50 transition-colors group">
-                    <td className="px-6 py-4">
-                      <div className="h-12 w-12 rounded-lg bg-neutral-100 overflow-hidden relative">
-                         {product.image_url && <img src={product.image_url} className="h-full w-full object-cover" />}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 font-medium text-neutral-900">{product.name}</td>
-                    <td className="px-6 py-4">
-                      <Badge variant="secondary">{(product as any).categories?.name || 'Sin categoría'}</Badge>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-neutral-500">
-                      {new Date(product.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="p-2 opacity-0 group-hover:opacity-100"
-                          onClick={() => {
-                            setEditingProduct(product);
-                            setShowModal(true);
-                          }}
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="p-2 text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100"
-                          onClick={() => handleDelete(product.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
+                  <InventoryRow
+                    key={product.id}
+                    product={product}
+                    categories={categories}
+                    onUpdate={handleInlineUpdate}
+                    onEdit={(p) => {
+                      setEditingProduct(p);
+                      setShowModal(true);
+                    }}
+                    onDelete={handleDelete}
+                  />
                 ))
               )}
             </tbody>

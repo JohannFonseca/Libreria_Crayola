@@ -13,6 +13,11 @@ CREATE TABLE products (
   description TEXT,
   category_id UUID REFERENCES categories(id) ON DELETE SET NULL,
   image_url TEXT,
+  precio_venta NUMERIC(10,2) DEFAULT NULL,
+  tipo_cliente TEXT CHECK (tipo_cliente IN ('normal', 'empresa')) DEFAULT 'normal',
+  visible_en_web BOOLEAN DEFAULT false,
+  destacado BOOLEAN DEFAULT false,
+  sort_order INT DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

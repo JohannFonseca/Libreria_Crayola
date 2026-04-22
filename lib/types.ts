@@ -11,6 +11,11 @@ export interface Product {
   description: string;
   category_id: string;
   image_url: string;
+  precio_venta: number | null;
+  tipo_cliente: 'normal' | 'empresa';
+  visible_en_web: boolean;
+  destacado: boolean;
+  sort_order: number;
   created_at: string;
   colors?: ProductColor[];
   categories?: Category;

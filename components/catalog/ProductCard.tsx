@@ -36,18 +36,27 @@ export const ProductCard = ({ product, onViewDetail, onAddToCart }: ProductCardP
         <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/5" />
       </div>
 
-      <CardContent className="p-4">
+      <CardContent className="p-4 flex flex-col flex-1">
         <div className="mb-1">
           <Badge variant="secondary" className="text-[10px] uppercase tracking-wider">
-            Categoría
+            {product.categories?.name || 'Categoría'}
           </Badge>
+          {product.tipo_cliente === 'empresa' && (
+            <Badge className="ml-2 text-[10px] uppercase tracking-wider bg-neutral-800 text-white">
+              Empresa
+            </Badge>
+          )}
         </div>
-        <h3 className="mb-1 text-lg font-semibold text-foreground">{product.name}</h3>
-        <p className="mb-4 line-clamp-2 text-sm text-neutral-500">
+        <h3 className="mb-1 text-lg font-semibold text-foreground line-clamp-1">{product.name}</h3>
+        <p className="mb-4 line-clamp-2 text-sm text-neutral-500 flex-1">
           {product.description}
         </p>
 
-        <div className="flex items-center gap-2">
+        <div className="mb-4 font-bold text-lg text-neutral-900">
+          ₡{product.precio_venta?.toLocaleString() || '0'}
+        </div>
+
+        <div className="flex items-center gap-2 mt-auto">
           <Button 
             className="flex-1 gap-2" 
             size="sm"

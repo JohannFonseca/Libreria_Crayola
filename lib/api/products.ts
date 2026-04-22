@@ -1,14 +1,32 @@
 import { supabase } from '../supabaseClient';
 import { Product } from '../types';
 
-export const getProducts = async () => {
+// Obtiene SOLO los productos visibles y con precio (para el frontend público)
+export const getPublicProducts = async () => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*, categories(*), product_colors(*)')
+    .eq('visible_en_web', true)
+    .not('precio_venta', 'is', null)
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching public products:', error.message);
+    throw error;
+  }
+  return data;
+};
+
+// Obtiene TODOS los productos (para el panel admin)
+export const getAllProductsAdmin = async () => {
   const { data, error } = await supabase
     .from('products')
     .select('*, categories(*), product_colors(*)')
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Error fetching products:', error.message);
+    console.error('Error fetching admin products:', error.message);
     throw error;
   }
   return data;
@@ -55,6 +73,26 @@ export const updateProduct = async (id: string, productData: any) => {
     throw error;
   }
   return data;
+};
+
+// Actualización parcial (para edición inline en admin)
+export const updateProductInline = async (id: string, updates: Partial<Product>) => {
+  const { data, error } = await supabase
+    .from('products')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(`Error inline updating product ${id}:`, error.message);
+    throw error;
+  }
+  return data;
+};
+
+export const toggleVisibility = async (id: string, visible: boolean) => {
+  return updateProductInline(id, { visible_en_web: visible });
 };
 
 export const deleteProduct = async (id: string) => {
