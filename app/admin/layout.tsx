@@ -43,7 +43,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
     { label: 'Productos', icon: Package, href: '/admin/products' },
     { label: 'Categorías', icon: Tag, href: '/admin/categories' },
-    { label: 'Analíticas', icon: BarChart3, href: '/admin/analytics' },
   ];
 
   return (
