@@ -29,7 +29,9 @@ export const getAllProductsAdmin = async (
     .select('*, categories(*), product_colors(*)', { count: 'exact' });
 
   if (filters.searchTerm) {
-    query = query.or(`name.ilike.%${filters.searchTerm}%,barcode.ilike.%${filters.searchTerm}%`);
+    // Búsqueda por nombre o código de barras (usando * para wildcards en or)
+    const term = `*${filters.searchTerm}*`;
+    query = query.or(`name.ilike.${term},barcode.ilike.${term}`);
   }
 
   if (filters.status === 'visibles') {

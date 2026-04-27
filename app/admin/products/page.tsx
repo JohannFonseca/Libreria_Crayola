@@ -16,6 +16,8 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = React.useState(true);
   const [loadingMore, setLoadingMore] = React.useState(false);
   const [totalCount, setTotalCount] = React.useState(0);
+  const [dbTotal, setDbTotal] = React.useState(0);
+  const [dbVisibles, setDbVisibles] = React.useState(0);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'visibles' | 'ocultos'>('todos');
   const [clientFilter, setClientFilter] = React.useState<'todos' | 'normal' | 'empresa'>('todos');
@@ -26,7 +28,15 @@ export default function AdminProductsPage() {
 
   React.useEffect(() => {
     fetchCategories();
+    fetchAbsoluteTotals();
   }, []);
+
+  const fetchAbsoluteTotals = async () => {
+    const { count: total } = await supabase.from('products').select('*', { count: 'exact', head: true });
+    const { count: visibles } = await supabase.from('products').select('*', { count: 'exact', head: true }).eq('visible_en_web', true);
+    setDbTotal(total || 0);
+    setDbVisibles(visibles || 0);
+  };
 
   // Debounce search
   React.useEffect(() => {
@@ -118,16 +128,16 @@ export default function AdminProductsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6 border-neutral-200">
-          <div className="text-sm font-medium text-neutral-500 mb-1">En esta vista</div>
-          <div className="text-3xl font-bold">{products.length} <span className="text-sm font-normal text-neutral-400">de {totalCount}</span></div>
+          <div className="text-sm font-medium text-neutral-500 mb-1">Total en Inventario</div>
+          <div className="text-3xl font-bold">{dbTotal}</div>
         </Card>
         <Card className="p-6 border-neutral-200 bg-green-50/50 border-green-100">
           <div className="text-sm font-medium text-green-600 mb-1">Visibles en Web</div>
-          <div className="text-3xl font-bold text-green-700">{visiblesCount}</div>
+          <div className="text-3xl font-bold text-green-700">{dbVisibles}</div>
         </Card>
         <Card className="p-6 border-neutral-200">
-          <div className="text-sm font-medium text-neutral-500 mb-1">Total Base de Datos</div>
-          <div className="text-3xl font-bold text-neutral-700">{totalCount}</div>
+          <div className="text-sm font-medium text-neutral-500 mb-1">Ocultos</div>
+          <div className="text-3xl font-bold text-neutral-700">{dbTotal - dbVisibles}</div>
         </Card>
       </div>
 
@@ -142,15 +152,22 @@ export default function AdminProductsPage() {
 
       <Card className="p-0 border-neutral-200 overflow-hidden shadow-sm">
         <div className="p-4 sm:p-6 border-b border-neutral-200 bg-white flex flex-col md:flex-row gap-4 justify-between items-center">
-          <div className="relative w-full md:w-96">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-            <input
-              type="text"
-              placeholder="Buscar por nombre o código..."
-              className="w-full rounded-lg border border-neutral-300 bg-white py-2 pl-9 pr-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 focus:outline-none transition-all"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+          <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+            <div className="relative w-full md:w-96">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+              <input
+                type="text"
+                placeholder="Buscar por nombre o código..."
+                className="w-full rounded-lg border border-neutral-300 bg-white py-2 pl-9 pr-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 focus:outline-none transition-all"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            {searchTerm && (
+              <span className="text-sm text-neutral-500">
+                Encontrados: <span className="font-bold text-primary">{totalCount}</span>
+              </span>
+            )}
           </div>
           
           <div className="flex w-full md:w-auto gap-3 flex-wrap">
