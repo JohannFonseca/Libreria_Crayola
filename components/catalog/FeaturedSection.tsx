@@ -59,7 +59,7 @@ export const FeaturedSection = ({ products, onViewDetail, onAddToCart }: Feature
       <div className="relative -mx-4 px-4 sm:mx-0 sm:px-0">
         <div 
           ref={scrollContainerRef}
-          className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory hide-scrollbar"
+          className="flex overflow-x-auto gap-4 sm:gap-6 pb-6 snap-x snap-mandatory hide-scrollbar"
         >
           {products.map((product) => (
             <div key={product.id} className="min-w-[280px] sm:min-w-[320px] max-w-[350px] snap-start shrink-0">

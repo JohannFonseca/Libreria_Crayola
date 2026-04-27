@@ -140,9 +140,9 @@ export default function CatalogPage() {
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-8 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-8 lg:grid-cols-3 xl:grid-cols-4 mt-8">
         {filteredProducts.map((product) => (
-          <div key={product.id} className="h-full flex">
+          <div key={product.id} className="flex flex-col h-full">
             <ProductCard
               product={product}
               onViewDetail={handleViewProduct}
