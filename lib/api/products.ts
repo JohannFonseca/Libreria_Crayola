@@ -18,19 +18,19 @@ export const getPublicProducts = async () => {
   return data;
 };
 
-// Obtiene TODOS los productos (para el panel admin)
-export const getAllProductsAdmin = async () => {
-  const { data, error } = await supabase
+// Obtiene los productos con paginación (para el panel admin)
+export const getAllProductsAdmin = async (from = 0, to = 199) => {
+  const { data, error, count } = await supabase
     .from('products')
-    .select('*, categories(*), product_colors(*)')
+    .select('*, categories(*), product_colors(*)', { count: 'exact' })
     .order('created_at', { ascending: false })
-    .limit(3000); // Aumentado para soportar el catálogo completo de ~1800 productos
+    .range(from, to);
 
   if (error) {
     console.error('Error fetching admin products:', error.message);
     throw error;
   }
-  return data;
+  return { products: data as Product[], count: count || 0 };
 };
 
 export const getProductById = async (id: string) => {

@@ -14,11 +14,15 @@ export default function AdminProductsPage() {
   const [products, setProducts] = React.useState<Product[]>([]);
   const [categories, setCategories] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [loadingMore, setLoadingMore] = React.useState(false);
+  const [totalCount, setTotalCount] = React.useState(0);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'visibles' | 'ocultos'>('todos');
   const [clientFilter, setClientFilter] = React.useState<'todos' | 'normal' | 'empresa'>('todos');
   const [showModal, setShowModal] = React.useState(false);
   const [editingProduct, setEditingProduct] = React.useState<Product | undefined>(undefined);
+  
+  const PAGE_SIZE = 200;
 
   React.useEffect(() => {
     fetchProducts();
@@ -30,14 +34,27 @@ export default function AdminProductsPage() {
     setCategories(data || []);
   };
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (isLoadMore = false) => {
     try {
-      const data = await getAllProductsAdmin();
-      setProducts(data || []);
+      if (isLoadMore) setLoadingMore(true);
+      else setLoading(true);
+
+      const from = isLoadMore ? products.length : 0;
+      const to = from + PAGE_SIZE - 1;
+
+      const { products: newProducts, count } = await getAllProductsAdmin(from, to);
+      
+      if (isLoadMore) {
+        setProducts([...products, ...newProducts]);
+      } else {
+        setProducts(newProducts);
+      }
+      setTotalCount(count);
     } catch (e) {
       console.error('Error fetching products:', e);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   };
 
@@ -102,16 +119,16 @@ export default function AdminProductsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6 border-neutral-200">
-          <div className="text-sm font-medium text-neutral-500 mb-1">Total en Inventario</div>
-          <div className="text-3xl font-bold">{products.length}</div>
+          <div className="text-sm font-medium text-neutral-500 mb-1">En esta vista</div>
+          <div className="text-3xl font-bold">{products.length} <span className="text-sm font-normal text-neutral-400">de {totalCount}</span></div>
         </Card>
         <Card className="p-6 border-neutral-200 bg-green-50/50 border-green-100">
           <div className="text-sm font-medium text-green-600 mb-1">Visibles en Web</div>
           <div className="text-3xl font-bold text-green-700">{visiblesCount}</div>
         </Card>
         <Card className="p-6 border-neutral-200">
-          <div className="text-sm font-medium text-neutral-500 mb-1">Ocultos</div>
-          <div className="text-3xl font-bold text-neutral-700">{products.length - visiblesCount}</div>
+          <div className="text-sm font-medium text-neutral-500 mb-1">Total Base de Datos</div>
+          <div className="text-3xl font-bold text-neutral-700">{totalCount}</div>
         </Card>
       </div>
 
@@ -209,6 +226,22 @@ export default function AdminProductsPage() {
             </tbody>
           </table>
         </div>
+
+        {products.length < totalCount && (
+          <div className="p-8 border-t border-neutral-100 bg-neutral-50/30 flex flex-col items-center gap-4">
+            <p className="text-sm text-neutral-500">
+              Mostrando {products.length} de {totalCount} productos
+            </p>
+            <Button 
+              variant="outline" 
+              onClick={() => fetchProducts(true)}
+              disabled={loadingMore}
+              className="px-10 h-11 rounded-xl bg-white"
+            >
+              {loadingMore ? 'Cargando...' : 'Cargar 200 más'}
+            </Button>
+          </div>
+        )}
       </Card>
     </div>
   );
