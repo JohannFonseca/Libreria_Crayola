@@ -24,6 +24,9 @@ export const generateWhatsAppLink = (items: CartItem[], branchId: BranchId = 'li
 
   items.forEach((item) => {
     message += `- *${item.name}*\n`;
+    if (item.barcode) {
+      message += `  Código: ${item.barcode}\n`;
+    }
     message += `  Cantidad: ${item.quantity}\n`;
     if (item.selectedColor) {
       message += `  Color: ${item.selectedColor}\n`;

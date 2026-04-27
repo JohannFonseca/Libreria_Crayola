@@ -18,8 +18,12 @@ CREATE TABLE products (
   visible_en_web BOOLEAN DEFAULT false,
   destacado BOOLEAN DEFAULT false,
   sort_order INT DEFAULT 0,
+  barcode TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Index for barcode
+CREATE INDEX IF NOT EXISTS idx_products_barcode ON products (barcode);
 
 -- Create Product Colors table
 CREATE TABLE product_colors (

@@ -23,6 +23,7 @@ export const ProductModal = ({ product, categories, onClose, onSuccess }: Produc
   const [tipoCliente, setTipoCliente] = React.useState<'normal' | 'empresa' | 'ambos'>(product?.tipo_cliente || 'ambos');
   const [visible, setVisible] = React.useState(product?.visible_en_web || false);
   const [destacado, setDestacado] = React.useState(product?.destacado || false);
+  const [barcode, setBarcode] = React.useState(product?.barcode || '');
   const [imageFile, setImageFile] = React.useState<File | null>(null);
   const [imagePreview, setImagePreview] = React.useState(product?.image_url || '');
   const [loading, setLoading] = React.useState(false);
@@ -59,6 +60,7 @@ export const ProductModal = ({ product, categories, onClose, onSuccess }: Produc
         tipo_cliente: tipoCliente,
         visible_en_web: visible,
         destacado: destacado,
+        barcode: barcode || null,
       };
 
       if (product) {
@@ -140,6 +142,16 @@ export const ProductModal = ({ product, categories, onClose, onSuccess }: Produc
                     placeholder="Ej. 1500 (Opcional)"
                     value={precioVenta}
                     onChange={(e) => setPrecioVenta(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1">Código de Barras (Opcional)</label>
+                  <input
+                    className="w-full rounded-xl border border-neutral-200 px-4 py-2 focus:border-primary focus:outline-none"
+                    placeholder="Ej. 7702111..."
+                    value={barcode}
+                    onChange={(e) => setBarcode(e.target.value)}
                   />
                 </div>
               </div>

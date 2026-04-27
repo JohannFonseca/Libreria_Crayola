@@ -16,6 +16,7 @@ export interface Product {
   visible_en_web: boolean;
   destacado: boolean;
   sort_order: number;
+  barcode?: string;
   created_at: string;
   colors?: ProductColor[];
   categories?: Category;

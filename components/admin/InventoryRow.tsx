@@ -54,6 +54,11 @@ export function InventoryRow({ product, categories, onUpdate, onEdit, onDelete }
         <div className="text-xs text-neutral-500 line-clamp-1 max-w-[200px]">{product.description}</div>
       </td>
       <td className="px-6 py-4">
+        <div className="text-xs font-mono text-neutral-500 bg-neutral-100 px-2 py-1 rounded inline-block">
+          {product.barcode || '—'}
+        </div>
+      </td>
+      <td className="px-6 py-4">
         <select 
           className="bg-transparent border border-transparent hover:border-neutral-200 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm w-full max-w-[150px]"
           value={product.category_id || ''}

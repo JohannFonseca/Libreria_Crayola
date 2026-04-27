@@ -65,7 +65,9 @@ export default function AdminProductsPage() {
   };
 
   const filteredProducts = products.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = 
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      (p.barcode && p.barcode.toLowerCase().includes(searchTerm.toLowerCase()));
     
     let matchesStatus = true;
     if (statusFilter === 'visibles') matchesStatus = p.visible_en_web === true;
@@ -128,7 +130,7 @@ export default function AdminProductsPage() {
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
             <input
               type="text"
-              placeholder="Buscar por nombre..."
+              placeholder="Buscar por nombre o código..."
               className="w-full rounded-lg border border-neutral-300 bg-white py-2 pl-9 pr-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 focus:outline-none transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -164,6 +166,7 @@ export default function AdminProductsPage() {
               <tr className="border-b border-neutral-200 bg-neutral-50/80 text-neutral-500">
                 <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-20">Img</th>
                 <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider">Producto</th>
+                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-32">Código</th>
                 <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-40">Categoría</th>
                 <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-40">Audiencia</th>
                 <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-36">Precio (₡)</th>
