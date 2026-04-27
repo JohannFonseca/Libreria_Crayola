@@ -46,14 +46,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#f5f5f7]">
-      {/* Sidebar - Más compacto */}
-      <aside className="w-56 bg-white border-r border-neutral-200">
+    <div className="flex h-screen overflow-hidden bg-[#f5f5f7]">
+      {/* Sidebar - Fijo y con scroll propio si es necesario */}
+      <aside className="w-56 bg-white border-r border-neutral-200 flex flex-col flex-shrink-0">
         <div className="p-6">
           <h1 className="text-lg font-bold tracking-tight">Admin Catalog</h1>
         </div>
 
-        <nav className="px-3 space-y-1">
+        <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -74,21 +74,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        <div className="absolute bottom-6 w-56 px-3">
+        <div className="p-6 border-t border-neutral-100">
           <Button
             variant="ghost"
             className="w-full justify-start gap-3 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-xl px-3"
             onClick={handleLogout}
           >
             <LogOut className="h-5 w-5" />
-            <span className="text-sm">Cerrar Sesión</span>
+            <span className="text-sm font-semibold">Cerrar Sesión</span>
           </Button>
         </div>
       </aside>
 
-      {/* Main Content - Con más espacio lateral */}
-      <main className="flex-1 overflow-y-auto">
-        <div className="p-4 sm:p-6 lg:p-8">
+      {/* Main Content - Con su propio scroll independiente */}
+      <main className="flex-1 overflow-y-auto bg-[#f5f5f7]">
+        <div className="p-4 sm:p-6 lg:p-10 max-w-[1600px]">
           {children}
         </div>
       </main>

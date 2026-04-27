@@ -52,6 +52,10 @@ export const ProductCard = ({ product, onViewDetail, onAddToCart }: ProductCardP
           {product.name}
         </h3>
 
+        <div className="mb-4 text-xs sm:text-sm text-neutral-500 line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem]">
+          {product.description || ''}
+        </div>
+
         <div className="mt-auto pt-2">
           <div className="mb-3 font-extrabold text-base sm:text-xl text-primary">
             ₡{product.precio_venta?.toLocaleString() || '0'}
