@@ -16,9 +16,9 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product, onViewDetail, onAddToCart }: ProductCardProps) => {
   return (
-    <Card className="group overflow-hidden p-0 flex flex-col h-full border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
+    <Card className="group overflow-hidden p-0 flex flex-col h-full border-neutral-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white">
       <div 
-        className="relative aspect-square cursor-pointer overflow-hidden bg-white p-2"
+        className="relative w-full aspect-square cursor-pointer overflow-hidden bg-white p-2 flex-shrink-0"
         onClick={() => onViewDetail(product)}
       >
         {product.image_url ? (
