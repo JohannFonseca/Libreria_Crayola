@@ -16,8 +16,11 @@ export const getAnalyticsStats = async () => {
     if (row.event_type === 'send_whatsapp') stats.whatsapp++;
   });
   
-  // also get active products count
-  const { count: productsCount } = await supabase.from('products').select('*', { count: 'exact', head: true });
+  // also get active products count (only visible)
+  const { count: productsCount } = await supabase
+    .from('products')
+    .select('*', { count: 'exact', head: true })
+    .eq('visible_en_web', true);
   
   return { ...stats, products: productsCount || 0 };
 };

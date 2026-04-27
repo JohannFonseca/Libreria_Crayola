@@ -23,7 +23,8 @@ export const getAllProductsAdmin = async () => {
   const { data, error } = await supabase
     .from('products')
     .select('*, categories(*), product_colors(*)')
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .limit(3000); // Aumentado para soportar el catálogo completo de ~1800 productos
 
   if (error) {
     console.error('Error fetching admin products:', error.message);
