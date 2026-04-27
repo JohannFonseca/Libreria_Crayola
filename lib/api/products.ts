@@ -18,11 +18,31 @@ export const getPublicProducts = async () => {
   return data;
 };
 
-// Obtiene los productos con paginación (para el panel admin)
-export const getAllProductsAdmin = async (from = 0, to = 199) => {
-  const { data, error, count } = await supabase
+// Obtiene los productos con paginación y filtros (para el panel admin)
+export const getAllProductsAdmin = async (
+  from = 0, 
+  to = 199, 
+  filters: { searchTerm?: string, status?: string, client?: string } = {}
+) => {
+  let query = supabase
     .from('products')
-    .select('*, categories(*), product_colors(*)', { count: 'exact' })
+    .select('*, categories(*), product_colors(*)', { count: 'exact' });
+
+  if (filters.searchTerm) {
+    query = query.or(`name.ilike.%${filters.searchTerm}%,barcode.ilike.%${filters.searchTerm}%`);
+  }
+
+  if (filters.status === 'visibles') {
+    query = query.eq('visible_en_web', true);
+  } else if (filters.status === 'ocultos') {
+    query = query.eq('visible_en_web', false);
+  }
+
+  if (filters.client && filters.client !== 'todos') {
+    query = query.eq('tipo_cliente', filters.client);
+  }
+
+  const { data, error, count } = await query
     .order('created_at', { ascending: false })
     .range(from, to);
 

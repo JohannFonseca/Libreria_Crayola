@@ -25,9 +25,16 @@ export default function AdminProductsPage() {
   const PAGE_SIZE = 200;
 
   React.useEffect(() => {
-    fetchProducts();
     fetchCategories();
   }, []);
+
+  // Debounce search
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchProducts();
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm, statusFilter, clientFilter]);
 
   const fetchCategories = async () => {
     const { data } = await supabase.from('categories').select('*');
@@ -42,7 +49,11 @@ export default function AdminProductsPage() {
       const from = isLoadMore ? products.length : 0;
       const to = from + PAGE_SIZE - 1;
 
-      const { products: newProducts, count } = await getAllProductsAdmin(from, to);
+      const { products: newProducts, count } = await getAllProductsAdmin(from, to, {
+        searchTerm,
+        status: statusFilter,
+        client: clientFilter
+      });
       
       if (isLoadMore) {
         setProducts([...products, ...newProducts]);
@@ -81,20 +92,8 @@ export default function AdminProductsPage() {
     }
   };
 
-  const filteredProducts = products.filter(p => {
-    const matchesSearch = 
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      (p.barcode && p.barcode.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    let matchesStatus = true;
-    if (statusFilter === 'visibles') matchesStatus = p.visible_en_web === true;
-    if (statusFilter === 'ocultos') matchesStatus = p.visible_en_web === false;
-
-    let matchesClient = true;
-    if (clientFilter !== 'todos') matchesClient = p.tipo_cliente === clientFilter;
-
-    return matchesSearch && matchesStatus && matchesClient;
-  });
+  // Con búsqueda en servidor, usamos directamente la lista de productos
+  const filteredProducts = products;
 
   const visiblesCount = products.filter(p => p.visible_en_web).length;
 
