@@ -7,7 +7,6 @@ export const getPublicProducts = async () => {
     .from('products')
     .select('*, categories(*), product_colors(*)')
     .eq('visible_en_web', true)
-    .not('precio_venta', 'is', null)
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false });
 

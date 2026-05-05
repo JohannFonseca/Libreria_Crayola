@@ -14,8 +14,7 @@ interface InventoryRowProps {
 
 export function InventoryRow({ product, categories, onUpdate, onEdit, onDelete }: InventoryRowProps) {
   const [isUpdating, setIsUpdating] = useState(false);
-  const [localPrice, setLocalPrice] = useState(product.precio_venta?.toString() || '');
-  const [priceEditing, setPriceEditing] = useState(false);
+
 
   const handleUpdate = async (updates: Partial<Product>) => {
     setIsUpdating(true);
@@ -26,17 +25,7 @@ export function InventoryRow({ product, categories, onUpdate, onEdit, onDelete }
     }
   };
 
-  const handlePriceSave = (e?: React.FocusEvent | React.KeyboardEvent) => {
-    if (e && 'key' in e && e.key !== 'Enter') return;
-    setPriceEditing(false);
-    
-    const numPrice = parseFloat(localPrice);
-    if (!isNaN(numPrice) && numPrice !== product.precio_venta) {
-      handleUpdate({ precio_venta: numPrice });
-    } else if (localPrice === '' && product.precio_venta !== null) {
-      handleUpdate({ precio_venta: null });
-    }
-  };
+
 
   return (
     <tr className={`hover:bg-neutral-50 transition-colors group ${isUpdating ? 'opacity-50' : ''}`}>
@@ -81,29 +70,7 @@ export function InventoryRow({ product, categories, onUpdate, onEdit, onDelete }
           <option value="empresa">Solo Empresa</option>
         </select>
       </td>
-      <td className="px-6 py-4">
-        <div className="flex items-center gap-1">
-          <span className="text-sm font-medium text-neutral-500">₡</span>
-          {priceEditing ? (
-            <input
-              autoFocus
-              type="number"
-              className="w-24 border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-              value={localPrice}
-              onChange={(e) => setLocalPrice(e.target.value)}
-              onBlur={handlePriceSave}
-              onKeyDown={handlePriceSave}
-            />
-          ) : (
-            <div 
-              className={`w-24 px-2 py-1 rounded border border-transparent hover:border-neutral-200 cursor-text text-sm ${!product.precio_venta ? 'text-red-400 italic' : ''}`}
-              onClick={() => setPriceEditing(true)}
-            >
-              {product.precio_venta ? product.precio_venta.toLocaleString() : 'Sin precio'}
-            </div>
-          )}
-        </div>
-      </td>
+
       <td className="px-6 py-4">
         <button
           onClick={() => handleUpdate({ destacado: !product.destacado })}

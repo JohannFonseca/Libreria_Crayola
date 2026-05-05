@@ -132,18 +132,7 @@ export const ProductModal = ({ product, categories, onClose, onSuccess }: Produc
                   </select>
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium mb-1">Precio de Venta (₡)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    className="w-full rounded-xl border border-neutral-200 px-4 py-2 focus:border-primary focus:outline-none"
-                    placeholder="Ej. 1500 (Opcional)"
-                    value={precioVenta}
-                    onChange={(e) => setPrecioVenta(e.target.value)}
-                  />
-                </div>
+
 
                 <div>
                   <label className="block text-sm font-medium mb-1">Código de Barras (Opcional)</label>

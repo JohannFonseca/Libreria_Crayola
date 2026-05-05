@@ -56,11 +56,8 @@ export const ProductCard = ({ product, onViewDetail, onAddToCart }: ProductCardP
           {product.description || ''}
         </div>
 
-        <div className="mt-auto pt-2">
-          <div className="mb-3 font-extrabold text-base sm:text-xl text-primary">
-            ₡{product.precio_venta?.toLocaleString() || '0'}
-          </div>
 
+        <div className="mt-auto pt-2">
           <div className="flex items-center gap-1.5 sm:gap-2">
             <Button 
               className="flex-1 gap-1.5 sm:gap-2 h-8 sm:h-10 text-[11px] sm:text-sm font-bold" 
