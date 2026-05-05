@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { Navbar } from "@/components/layout/Navbar";
+import { MapPin, ExternalLink } from 'lucide-react';
 import React from 'react';
 
 export const ClientLayoutWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -26,14 +27,43 @@ export const ClientLayoutWrapper = ({ children }: { children: React.ReactNode })
               <a href="mailto:Libreriacrayola25@gmail.com" className="text-sm text-neutral-500 hover:text-primary transition-colors">Libreriacrayola25@gmail.com</a>
             </div>
 
-            <div className="flex flex-col items-center md:items-start gap-3">
-              <div className="font-semibold text-primary">Ubicaciones</div>
-              <a href="https://maps.app.goo.gl/gmvax4dDDtRWG1AZ7" target="_blank" rel="noopener noreferrer" className="text-sm text-neutral-500 hover:text-primary transition-colors flex items-center gap-2">
-                📍 Liberia
-              </a>
-              <a href="https://maps.app.goo.gl/eoJA4t8FUNzwXYr46" target="_blank" rel="noopener noreferrer" className="text-sm text-neutral-500 hover:text-primary transition-colors flex items-center gap-2">
-                📍 Bagaces
-              </a>
+            <div className="flex flex-col items-center md:items-start gap-4">
+              <div className="text-sm font-bold uppercase tracking-widest text-primary/50">Nuestras Sucursales</div>
+              <div className="flex flex-col gap-4">
+                <a 
+                  href="https://maps.app.goo.gl/gmvax4dDDtRWG1AZ7" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="group flex items-center gap-4 text-neutral-600 hover:text-primary transition-all"
+                >
+                  <div className="bg-neutral-100 p-2.5 rounded-xl group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-300 shadow-sm">
+                    <MapPin className="h-5 w-5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold">Liberia, Guanacaste</span>
+                    <span className="text-[10px] uppercase tracking-wider text-primary font-bold opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                      Ver ubicación <ExternalLink className="h-2 w-2" />
+                    </span>
+                  </div>
+                </a>
+                
+                <a 
+                  href="https://maps.app.goo.gl/eoJA4t8FUNzwXYr46" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="group flex items-center gap-4 text-neutral-600 hover:text-primary transition-all"
+                >
+                  <div className="bg-neutral-100 p-2.5 rounded-xl group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-300 shadow-sm">
+                    <MapPin className="h-5 w-5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold">Bagaces, Guanacaste</span>
+                    <span className="text-[10px] uppercase tracking-wider text-primary font-bold opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                      Ver ubicación <ExternalLink className="h-2 w-2" />
+                    </span>
+                  </div>
+                </a>
+              </div>
             </div>
 
             <div className="text-sm text-neutral-500 self-center">

@@ -2,11 +2,13 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Search, SlidersHorizontal, Building2, User } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ProductCard } from '@/components/catalog/ProductCard';
 import { ProductDetail } from '@/components/catalog/ProductDetail';
 import { FeaturedSection } from '@/components/catalog/FeaturedSection';
+import { ProductCardSkeleton } from '@/components/catalog/ProductCardSkeleton';
 import { Button } from '@/components/ui/Button';
 import { Product } from '@/lib/types';
 import { useCart } from '@/context/CartContext';
@@ -22,18 +24,20 @@ export default function CatalogPage() {
   const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
     try {
+      setLoading(true);
       const data = await getPublicProducts();
       setProducts(data || []);
     } catch (e) {
       console.error('Error loading catalog:', e);
     } finally {
-      setLoading(false);
+      // Un pequeño delay artificial para que la transición no sea brusca
+      setTimeout(() => setLoading(false), 400);
     }
   };
 
@@ -46,13 +50,17 @@ export default function CatalogPage() {
     return products.filter(p => p.destacado);
   }, [products]);
 
-  const filteredProducts = products.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          p.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'Todas' || p.categories?.name === selectedCategory;
-    const matchesClient = selectedClientType === 'todos' || !p.tipo_cliente || p.tipo_cliente === 'ambos' || p.tipo_cliente === selectedClientType;
-    return matchesSearch && matchesCategory && matchesClient;
-  });
+  const filteredProducts = useMemo(() => {
+    return products.filter(p => {
+      const name = p.name || '';
+      const description = p.description || '';
+      const matchesSearch = name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                            description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'Todas' || p.categories?.name === selectedCategory;
+      const matchesClient = selectedClientType === 'todos' || !p.tipo_cliente || p.tipo_cliente === 'ambos' || p.tipo_cliente === selectedClientType;
+      return matchesSearch && matchesCategory && matchesClient;
+    });
+  }, [products, searchTerm, selectedCategory, selectedClientType]);
 
   const handleAddToCart = (product: Product, color?: string) => {
     trackEvent(product.id, 'add_to_cart');
@@ -65,25 +73,55 @@ export default function CatalogPage() {
     setSelectedProduct(product);
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.05
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <header className="mb-12">
-        <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          Nuestro Catálogo
-        </h1>
-        <p className="max-w-2xl text-lg text-neutral-500">
-          Explora nuestra amplia gama de productos de alta calidad para oficina y estudio.
-        </p>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            Nuestro Catálogo
+          </h1>
+          <p className="max-w-2xl text-lg text-neutral-500">
+            Explora nuestra amplia gama de productos de alta calidad para oficina y estudio.
+          </p>
+        </motion.div>
       </header>
 
-      {/* Solo mostrar destacados si no hay búsquedas activas y hay productos destacados */}
-      {!loading && searchTerm === '' && selectedCategory === 'Todas' && selectedClientType === 'todos' && (
-        <FeaturedSection 
-          products={featuredProducts} 
-          onViewDetail={handleViewProduct}
-          onAddToCart={handleAddToCart}
-        />
-      )}
+      <AnimatePresence mode="wait">
+        {!loading && searchTerm === '' && selectedCategory === 'Todas' && selectedClientType === 'todos' && featuredProducts.length > 0 && (
+          <motion.div
+            key="featured"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+          >
+            <FeaturedSection 
+              products={featuredProducts} 
+              onViewDetail={handleViewProduct}
+              onAddToCart={handleAddToCart}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Filters & Search */}
       <div className="mb-12 flex flex-col gap-6">
@@ -93,43 +131,42 @@ export default function CatalogPage() {
             <input
               type="text"
               placeholder="Buscar productos..."
-              className="w-full rounded-full border border-neutral-200 bg-white py-3 pl-12 pr-4 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
+              className="w-full rounded-full border border-neutral-200 bg-white py-3 pl-12 pr-4 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all shadow-sm focus:shadow-md"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          <div className="flex bg-neutral-100 rounded-full p-1 shrink-0 self-start md:self-auto">
-            <button
-              onClick={() => setSelectedClientType('todos')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedClientType === 'todos' ? 'bg-white shadow-sm text-neutral-900' : 'text-neutral-500 hover:text-neutral-700'}`}
-            >
-              Todos
-            </button>
-            <button
-              onClick={() => setSelectedClientType('normal')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedClientType === 'normal' ? 'bg-white shadow-sm text-neutral-900' : 'text-neutral-500 hover:text-neutral-700'}`}
-            >
-              <User className="w-4 h-4" /> Normal
-            </button>
-            <button
-              onClick={() => setSelectedClientType('empresa')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedClientType === 'empresa' ? 'bg-white shadow-sm text-neutral-900' : 'text-neutral-500 hover:text-neutral-700'}`}
-            >
-              <Building2 className="w-4 h-4" /> Empresas
-            </button>
+          <div className="flex bg-neutral-100 rounded-full p-1 shrink-0 self-start md:self-auto shadow-inner">
+            {(['todos', 'normal', 'empresa'] as const).map((type) => (
+              <button
+                key={type}
+                onClick={() => setSelectedClientType(type)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  selectedClientType === type 
+                    ? 'bg-white shadow-md text-primary scale-105' 
+                    : 'text-neutral-500 hover:text-neutral-700'
+                }`}
+              >
+                {type === 'normal' && <User className="w-4 h-4" />}
+                {type === 'empresa' && <Building2 className="w-4 h-4" />}
+                {type === 'todos' ? 'Todos' : type === 'normal' ? 'Normal' : 'Empresas'}
+              </button>
+            ))}
           </div>
         </div>
         
         {/* Categories as filter chips */}
         {categoriesList.length > 1 && (
-          <div className="flex flex-wrap items-center gap-2">
-            <SlidersHorizontal className="h-4 w-4 mr-2 text-neutral-500" />
+          <div className="flex flex-wrap items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            <SlidersHorizontal className="h-4 w-4 mr-2 text-neutral-400 shrink-0" />
             {categoriesList.map(cat => (
               <Button
                 key={cat}
                 variant={selectedCategory === cat ? 'primary' : 'outline'}
-                className="rounded-full px-4 text-sm h-8"
+                className={`rounded-full px-5 text-sm h-9 transition-all duration-300 shrink-0 ${
+                  selectedCategory === cat ? 'scale-105 shadow-md shadow-primary/20' : 'hover:bg-neutral-50'
+                }`}
                 onClick={() => setSelectedCategory(cat)}
               >
                 {cat}
@@ -139,45 +176,77 @@ export default function CatalogPage() {
         )}
       </div>
 
-      {/* Product Grid */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-8 lg:grid-cols-3 xl:grid-cols-4 mt-8">
-        {filteredProducts.map((product) => (
-          <div key={product.id} className="flex flex-col h-full">
-            <ProductCard
-              product={product}
-              onViewDetail={handleViewProduct}
-              onAddToCart={(p) => handleAddToCart(p)}
-            />
-          </div>
-        ))}
-      </div>
-
-      {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center animate-pulse">
-          <div className="mb-4 rounded-full bg-primary/10 p-6">
-            <Search className="h-10 w-10 text-primary" />
-          </div>
-          <h3 className="text-xl font-semibold text-neutral-900">Cargando catálogo...</h3>
-          <p className="mt-2 text-neutral-500">Preparando los mejores productos para ti.</p>
-        </div>
-      ) : filteredProducts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="mb-4 rounded-full bg-neutral-100 p-6">
-            <Search className="h-10 w-10 text-neutral-400" />
-          </div>
-          <h3 className="text-xl font-semibold text-neutral-900">No encontramos resultados</h3>
-          <p className="mt-2 text-neutral-500">Intenta buscar con otros términos o filtros.</p>
-        </div>
-      ) : null}
+      {/* Loading State */}
+      <AnimatePresence mode="wait">
+        {loading ? (
+          <motion.div 
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="grid grid-cols-2 gap-3 sm:gap-8 lg:grid-cols-3 xl:grid-cols-4 mt-8"
+          >
+            {[...Array(8)].map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
+          </motion.div>
+        ) : filteredProducts.length > 0 ? (
+          <motion.div 
+            key="grid"
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-2 gap-3 sm:gap-8 lg:grid-cols-3 xl:grid-cols-4 mt-8"
+          >
+            {filteredProducts.map((product) => (
+              <motion.div key={product.id} variants={itemVariants} layout>
+                <ProductCard
+                  product={product}
+                  onViewDetail={handleViewProduct}
+                  onAddToCart={(p) => handleAddToCart(p)}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          <motion.div 
+            key="empty"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex flex-col items-center justify-center py-32 text-center"
+          >
+            <div className="mb-6 rounded-full bg-neutral-100 p-8">
+              <Search className="h-12 w-12 text-neutral-400" />
+            </div>
+            <h3 className="text-2xl font-bold text-neutral-900">No encontramos resultados</h3>
+            <p className="mt-2 text-neutral-500 max-w-sm">
+              Intenta buscar con otros términos o cambia los filtros aplicados.
+            </p>
+            <Button 
+              variant="outline" 
+              className="mt-8 rounded-full"
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedCategory('Todas');
+                setSelectedClientType('todos');
+              }}
+            >
+              Limpiar todos los filtros
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Product Detail Modal */}
-      {selectedProduct && (
-        <ProductDetail
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-          onAddToCart={handleAddToCart}
-        />
-      )}
+      <AnimatePresence>
+        {selectedProduct && (
+          <ProductDetail
+            product={selectedProduct}
+            onClose={() => setSelectedProduct(null)}
+            onAddToCart={handleAddToCart}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

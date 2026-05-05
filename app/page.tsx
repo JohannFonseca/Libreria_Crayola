@@ -2,124 +2,196 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, Shield, Zap } from 'lucide-react';
+import { ArrowRight, Sparkles, Shield, Zap, Users, Building, ShoppingBag, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { motion } from 'framer-motion';
+import { LocationsSection } from '@/components/layout/LocationsSection';
 
 export default function HomePage() {
   return (
-    <div className="relative overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative px-4 pt-20 pb-32 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl text-center">
+    <div className="relative overflow-hidden bg-white">
+      {/* Hero Section - Clean & Centered */}
+      <section className="relative min-h-[85vh] flex items-center justify-center pt-20 pb-32 overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full text-center relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6 }}
           >
-            <span className="inline-flex items-center rounded-full bg-primary/10 px-6 py-2 text-sm font-bold text-primary mb-8 border border-primary/20 shadow-sm animate-pulse">
-              Catálogo Actualizado 
-            </span>
-            <h1 className="text-5xl font-extrabold tracking-tight text-foreground sm:text-7xl mb-8">
+            <div className="inline-flex items-center gap-2 rounded-full bg-primary/5 px-4 py-1.5 text-sm font-bold text-primary mb-10 border border-primary/10 shadow-sm">
+              <Sparkles className="h-4 w-4 animate-pulse" />
+              <span>Líderes en Guanacaste desde hace 10 años</span>
+            </div>
+            
+            <h1 className="text-6xl lg:text-8xl font-black tracking-tight text-neutral-900 mb-8 leading-[1.05]">
               Tu papelería de confianza, <br />
-              <span className="text-primary italic">ahora digital.</span>
+              <span className="text-primary">ahora digital.</span>
             </h1>
-            <p className="mx-auto max-w-2xl text-xl text-neutral-500 mb-12">
-              Explora miles de productos para tu oficina, escuela u hogar. Cotiza rápido, 
-              descarga tu lista y recíbela por WhatsApp en segundos.
+            
+            <p className="mx-auto max-w-2xl text-xl text-neutral-500 mb-12 leading-relaxed">
+              Abastecemos su negocio, escuela u hogar con productos de la más alta calidad. 
+              Explore nuestro catálogo, cotice rápido y reciba atención personalizada vía WhatsApp.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/catalog">
-                <Button className="w-full sm:w-auto px-8 py-6 text-lg rounded-2xl gap-2 group">
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Link href="/catalog" className="w-full sm:w-auto">
+                <Button className="w-full sm:w-auto h-16 px-10 text-xl rounded-2xl gap-2 shadow-2xl shadow-primary/20 hover:shadow-primary/30 transition-all group">
                   Explorar Catálogo
-                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <a href="#sobre-nosotros">
-                <Button variant="ghost" className="w-full sm:w-auto px-8 py-6 text-lg text-neutral-600">
-                  Sobre nosotros
+              <a href="#sobre-nosotros" className="w-full sm:w-auto">
+                <Button variant="ghost" className="w-full sm:w-auto h-16 px-10 text-xl text-neutral-600 hover:bg-neutral-100 rounded-2xl">
+                  Nuestra Historia
                 </Button>
               </a>
             </div>
+            
+            <div className="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-3xl mx-auto pt-12 border-t border-neutral-100">
+              <div className="space-y-1">
+                <div className="text-3xl font-black text-neutral-900 tracking-tighter">10+</div>
+                <div className="text-xs text-neutral-500 uppercase tracking-[0.2em] font-bold">Años sirviendo</div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-3xl font-black text-neutral-900 tracking-tighter">5k+</div>
+                <div className="text-xs text-neutral-500 uppercase tracking-[0.2em] font-bold">Productos listos</div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-3xl font-black text-neutral-900 tracking-tighter">100%</div>
+                <div className="text-xs text-neutral-500 uppercase tracking-[0.2em] font-bold">Costarricense</div>
+              </div>
+            </div>
           </motion.div>
         </div>
-
-        {/* Decorative elements */}
-        <div className="absolute top-0 -z-10 h-full w-full opacity-40 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 h-[500px] w-[500px] bg-primary/30 blur-[120px] rounded-full animate-blob" />
-          <div className="absolute top-1/2 right-1/4 h-[400px] w-[400px] bg-blue-400/20 blur-[100px] rounded-full animate-blob animation-delay-2000" />
-          <div className="absolute bottom-1/4 left-1/3 h-[600px] w-[600px] bg-indigo-300/20 blur-[140px] rounded-full animate-blob animation-delay-4000" />
+        
+        {/* Abstract Background Design */}
+        <div className="absolute top-0 inset-x-0 -z-10 h-full w-full pointer-events-none overflow-hidden">
+          <div className="absolute -top-24 left-1/2 -translate-x-1/2 h-[600px] w-[600px] bg-primary/5 blur-[120px] rounded-full" />
+          <div className="absolute bottom-0 right-0 h-[400px] w-[400px] bg-blue-50/50 blur-[100px] rounded-full translate-x-1/2" />
+          <div className="absolute top-1/2 left-0 h-[300px] w-[300px] bg-indigo-50/50 blur-[80px] rounded-full -translate-x-1/2" />
         </div>
       </section>
 
-      {/* Features */}
-      <section className="bg-white py-24 border-y border-neutral-100">
+      {/* Value Pillars Section */}
+      <section className="py-32 bg-neutral-50/50 border-y border-neutral-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <h2 className="text-sm font-bold text-primary uppercase tracking-[0.3em] mb-6">Excelencia & Compromiso</h2>
+            <p className="text-4xl font-bold text-neutral-900 tracking-tight">Diseñado para simplificar su abastecimiento.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { 
-                title: 'Selección Premium', 
-                desc: 'Solo las mejores marcas para garantizar la mejor calidad en tus suministros.',
-                icon: Sparkles 
+                title: 'Calidad Garantizada', 
+                desc: 'Solo trabajamos con marcas líderes para asegurar que cada artículo cumpla con sus expectativas.',
+                icon: ShoppingBag,
+                color: 'text-blue-600',
+                bgColor: 'bg-blue-600/5'
               },
               { 
-                title: 'Cotización Veloz', 
-                desc: 'Sin precios públicos, pero con respuestas inmediatas vía WhatsApp.',
-                icon: Zap 
+                title: 'Atención Inmediata', 
+                desc: 'Nuestro sistema de cotización por WhatsApp le brinda respuestas rápidas y personalizadas.',
+                icon: Zap,
+                color: 'text-yellow-600',
+                bgColor: 'bg-yellow-600/5'
               },
               { 
-                title: 'Confianza Total', 
-                desc: 'Más de 10 años sirviendo a la comunidad con excelencia y puntualidad.',
-                icon: Shield 
+                title: 'Respaldo Local', 
+                desc: 'Con presencia física en Liberia y Bagaces, brindamos la seguridad de un servicio cercano.',
+                icon: Shield,
+                color: 'text-green-600',
+                bgColor: 'bg-green-600/5'
               }
             ].map((f, i) => (
-              <div key={i} className="flex flex-col items-center text-center">
-                <div className="mb-6 rounded-[24px] bg-neutral-50 p-6 flex items-center justify-center text-primary border border-neutral-100">
-                  <f.icon className="h-8 w-8" />
+              <motion.div 
+                key={i}
+                whileHover={{ y: -8 }}
+                className="bg-white p-12 rounded-[40px] border border-neutral-100 shadow-sm hover:shadow-2xl transition-all duration-500"
+              >
+                <div className={`mb-8 h-20 w-20 rounded-3xl ${f.bgColor} ${f.color} flex items-center justify-center`}>
+                  <f.icon className="h-10 w-10" />
                 </div>
-                <h3 className="text-xl font-bold mb-4">{f.title}</h3>
-                <p className="text-neutral-500">{f.desc}</p>
-              </div>
+                <h3 className="text-2xl font-bold mb-4 text-neutral-900">{f.title}</h3>
+                <p className="text-neutral-500 leading-relaxed text-lg">{f.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Sobre Nosotros */}
-      <section id="sobre-nosotros" className="bg-neutral-50 py-24 border-b border-neutral-100">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-6">
-            Sobre Nosotros
-          </h2>
-          <div className="mx-auto max-w-3xl">
-            <p className="text-lg text-neutral-600 mb-6 leading-relaxed">
-              Somos una empresa 100% costarricense, <strong className="text-primary font-semibold">nacida con orgullo en Bagaces, Guanacaste</strong>. 
-              Nuestra misión es ofrecerte los mejores suministros de oficina, papelería y artículos escolares con una atención 
-              cálida y personalizada, al verdadero estilo guanacasteco.
-            </p>
-            <p className="text-lg text-neutral-600 leading-relaxed">
-              Nos esforzamos por brindarte calidad, rapidez en nuestro servicio 
-              y la confianza de que siempre encontrarás lo que necesitas para tu hogar, escuela o negocio.
-            </p>
-          </div>
+      {/* About Section - Text Focused */}
+      <section id="sobre-nosotros" className="py-32 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="mx-auto max-w-5xl text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="space-y-12"
+          >
+            <div>
+              <h2 className="text-sm font-bold text-primary uppercase tracking-[0.3em] mb-6">Nuestra Historia</h2>
+              <h3 className="text-5xl lg:text-6xl font-black text-neutral-900 leading-tight">
+                Raíces en Guanacaste, <br />
+                <span className="text-neutral-400">servimos a todo el país.</span>
+              </h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
+              <p className="text-xl text-neutral-600 leading-relaxed">
+                Librería Crayola nació con un objetivo claro: modernizar y facilitar el acceso a suministros de papelería y oficina de alta calidad en la región.
+              </p>
+              <p className="text-xl text-neutral-600 leading-relaxed">
+                Hoy, desde nuestra base en Bagaces, nos hemos consolidado como el aliado estratégico para empresas e instituciones que valoran la rapidez, la confianza y el trato humano.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 pt-12 border-t border-neutral-100">
+              {[
+                'Atención Personalizada',
+                'Logística de Vanguardia',
+                'Calidad de Exportación',
+                'Valores Familiares'
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary" />
+                  <span className="text-lg font-bold text-neutral-800">{item}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Categories CTA */}
+      {/* Locations Section */}
+      <div className="bg-neutral-50/50">
+        <LocationsSection />
+      </div>
+
+      {/* CTA Section - Professional High-Contrast */}
       <section className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl bg-primary rounded-[48px] p-12 lg:p-20 text-white text-center relative overflow-hidden shadow-2xl">
-          <div className="relative z-10">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-8">¿Listo para renovar tu stock?</h2>
-            <p className="text-white/80 text-lg lg:text-xl mb-12 max-w-2xl mx-auto">
-              Nuestro equipo está listo para asesorarte. Agrega lo que necesites al carrito y te contactaremos de inmediato.
+        <div className="mx-auto max-w-7xl bg-neutral-900 rounded-[64px] p-12 lg:p-24 text-white text-center relative overflow-hidden shadow-3xl">
+          <div className="relative z-10 max-w-3xl mx-auto space-y-10">
+            <h2 className="text-5xl lg:text-7xl font-black tracking-tighter">¿Listo para renovar su stock?</h2>
+            <p className="text-neutral-400 text-xl lg:text-2xl leading-relaxed">
+              Descubra por qué somos la opción preferida de las empresas en Guanacaste. 
+              Explore nuestro catálogo y hablemos por WhatsApp.
             </p>
-            <Link href="/catalog">
-              <Button className="bg-white text-primary hover:bg-white/90 px-10 py-6 text-xl rounded-2xl shadow-lg">
-                Comenzar ahora
-              </Button>
-            </Link>
+            <div className="pt-4">
+              <Link href="/catalog">
+                <Button className="h-20 px-14 text-2xl rounded-2xl bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/40 transition-all hover:scale-105 active:scale-95">
+                  Comenzar Cotización
+                </Button>
+              </Link>
+            </div>
           </div>
-          <div className="absolute -bottom-24 -right-24 h-96 w-96 bg-white/10 blur-[80px] rounded-full pointer-events-none" />
+          
+          {/* Subtle design elements */}
+          <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
+            <div className="absolute -top-1/2 -left-1/4 w-full h-full bg-primary blur-[160px] rounded-full" />
+            <div className="absolute -bottom-1/2 -right-1/4 w-full h-full bg-blue-600 blur-[160px] rounded-full" />
+          </div>
         </div>
       </section>
     </div>
