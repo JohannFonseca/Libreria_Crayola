@@ -7,15 +7,22 @@ export const generatePDF = (items: CartItem[]) => {
 
   // Header
   doc.setFontSize(22);
-  doc.setTextColor(0, 113, 227); // Apple-like Blue
-  doc.text('Cotización - Librería Crayola', 20, 20);
+  doc.setTextColor(0, 113, 227); // Brand Primary Blue
+  doc.setFont('helvetica', 'bold');
+  doc.text('Cotización de Productos', 20, 20);
+  
+  doc.setFontSize(14);
+  doc.setTextColor(80, 80, 80);
+  doc.text('Librería Crayola', 20, 27);
 
-  doc.setFontSize(10);
-  doc.setTextColor(100);
-  doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 28);
-  doc.text('WhatsApp: +506 8446 6444', 20, 33);
+  doc.setFontSize(9);
+  doc.setTextColor(120, 120, 120);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Fecha de Emisión: ${new Date().toLocaleDateString()}`, 20, 35);
+  doc.text('WhatsApp Liberia: +506 8446 6444  |  WhatsApp Bagaces: +506 8617 9090', 20, 40);
+  doc.text('Email: Libreriacrayola25@gmail.com', 20, 45);
 
-  // Table
+  // Table Data
   const tableData = items.map((item) => [
     item.name,
     item.selectedColor || '-',
@@ -23,23 +30,31 @@ export const generatePDF = (items: CartItem[]) => {
   ]);
 
   autoTable(doc, {
-    startY: 45,
+    startY: 52,
     head: [['Producto', 'Color', 'Cantidad']],
     body: tableData,
-    headStyles: { fillColor: [0, 113, 227] },
-    alternateRowStyles: { fillColor: [245, 245, 247] },
+    headStyles: { fillColor: [0, 113, 227], textColor: [255, 255, 255], fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [250, 250, 252] },
     margin: { left: 20, right: 20 },
+    theme: 'striped',
   });
+
 
   // Footer
   const pageCount = (doc as any).internal.getNumberOfPages();
   doc.setFontSize(8);
+  doc.setTextColor(140, 140, 140);
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.text(
-      'Esta es una cotización informativa y no representa un compromiso de compra ni reserva de stock.',
+      'Esta es una cotización informativa basada en los precios vigentes. No representa un compromiso de compra ni reserva de stock.',
       20,
-      doc.internal.pageSize.height - 10
+      doc.internal.pageSize.height - 15
+    );
+    doc.text(
+      `Página ${i} de ${pageCount}`,
+      doc.internal.pageSize.width - 35,
+      doc.internal.pageSize.height - 15
     );
   }
 
