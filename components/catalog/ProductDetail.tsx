@@ -55,11 +55,6 @@ export const ProductDetail = ({ product, onClose, onAddToCart }: ProductDetailPr
                 <Badge variant="secondary" className="bg-primary/5 text-primary border-none rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider">
                   {product.categories?.name || 'Varios'}
                 </Badge>
-                {product.tipo_cliente === 'empresa' && (
-                  <Badge className="bg-neutral-900 text-white border-none rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider">
-                    Empresa
-                  </Badge>
-                )}
               </div>
               <h2 className="text-2xl sm:text-3xl font-black text-neutral-900 leading-tight mb-2">
                 {product.name}

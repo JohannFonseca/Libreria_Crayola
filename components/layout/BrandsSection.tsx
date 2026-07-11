@@ -254,16 +254,16 @@ export const BrandsSection = ({ products, loading, onViewDetail, onAddToCart }: 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="grid grid-cols-2 md:grid-cols-4 gap-6"
+                className="flex flex-col items-center justify-center py-20 text-center w-full gap-4"
               >
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="h-[360px] rounded-3xl bg-neutral-50 border border-neutral-100 animate-pulse flex flex-col p-5">
-                    <div className="aspect-square bg-neutral-100/80 rounded-2xl mb-4" />
-                    <div className="h-4 bg-neutral-100/80 rounded w-2/3 mb-2" />
-                    <div className="h-3 bg-neutral-100/80 rounded w-1/2 mb-4" />
-                    <div className="h-8 bg-neutral-100/80 rounded-xl mt-auto" />
-                  </div>
-                ))}
+                <div className="relative flex items-center justify-center h-12 w-12">
+                  <div className="absolute h-12 w-12 rounded-full border-4 border-primary/10 animate-pulse" />
+                  <div className="absolute h-12 w-12 rounded-full border-4 border-t-primary animate-spin" />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="font-extrabold text-neutral-800 text-lg">Cargando destacados...</h4>
+                  <p className="text-xs text-neutral-400 font-medium">Buscando productos de {selectedBrand.name}</p>
+                </div>
               </motion.div>
             ) : brandProducts.length > 0 ? (
               <motion.div

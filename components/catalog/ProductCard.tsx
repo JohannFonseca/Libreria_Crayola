@@ -50,11 +50,6 @@ export const ProductCard = ({ product, onViewDetail, onAddToCart }: ProductCardP
           <Badge variant="secondary" className="text-[9px] font-bold px-2 py-0.5 uppercase tracking-wider bg-neutral-100 text-neutral-600 border-none rounded-md">
             {product.categories?.name || 'Varios'}
           </Badge>
-          {product.tipo_cliente === 'empresa' && (
-            <Badge className="text-[9px] font-bold px-2 py-0.5 uppercase tracking-wider bg-neutral-900 text-white border-none rounded-md">
-              🏢 Empresa
-            </Badge>
-          )}
         </div>
         
         <h3 
