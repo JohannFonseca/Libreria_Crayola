@@ -16,9 +16,18 @@ import { useCart } from '@/context/CartContext';
 import { getPublicProducts } from '@/lib/api/products';
 import { trackEvent } from '@/lib/api/analytics';
 
+// Accent normalization helper to make search accent-insensitive
+const normalizeText = (text: string) => {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+};
+
 function CatalogContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
+  const searchParam = searchParams.get('search');
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
@@ -32,12 +41,15 @@ function CatalogContent() {
     fetchProducts();
   }, []);
 
-  // Pre-select category if set in query parameters
+  // Pre-select category or search term if set in query parameters
   useEffect(() => {
     if (categoryParam) {
       setSelectedCategory(categoryParam);
     }
-  }, [categoryParam]);
+    if (searchParam) {
+      setSearchTerm(searchParam);
+    }
+  }, [categoryParam, searchParam]);
 
   const fetchProducts = async () => {
     try {
@@ -61,11 +73,12 @@ function CatalogContent() {
   }, [products]);
 
   const filteredProducts = useMemo(() => {
+    const normSearch = normalizeText(searchTerm);
     return products.filter(p => {
-      const name = p.name || '';
-      const description = p.description || '';
-      const matchesSearch = name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                            description.toLowerCase().includes(searchTerm.toLowerCase());
+      const normName = normalizeText(p.name || '');
+      const normDescription = normalizeText(p.description || '');
+      const matchesSearch = normName.includes(normSearch) || 
+                            normDescription.includes(normSearch);
       const matchesCategory = selectedCategory === 'Todas' || p.categories?.name === selectedCategory;
       const matchesClient = selectedClientType === 'todos' || !p.tipo_cliente || p.tipo_cliente === 'ambos' || p.tipo_cliente === selectedClientType;
       return matchesSearch && matchesCategory && matchesClient;

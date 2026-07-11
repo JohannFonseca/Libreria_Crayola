@@ -20,7 +20,7 @@ const locations = [
     name: 'Sucursal Bagaces',
     address: 'Centro de Bagaces, Guanacaste',
     phone: '+506 8617 9090',
-    mapLink: 'https://maps.app.goo.gl/eoJA4t8FUNzwXYr46',
+    mapLink: 'https://maps.app.goo.gl/5zvyG22BUnxZKAtG7',
     color: 'bg-blue-600'
   }
 ];

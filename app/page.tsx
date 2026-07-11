@@ -7,10 +7,15 @@ import {
   ShoppingBag, BookOpen, Briefcase, Palette, Laptop, Pencil, ChevronRight 
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { LocationsSection } from '@/components/layout/LocationsSection';
+import { BrandsSection } from '@/components/layout/BrandsSection';
+import { ProductDetail } from '@/components/catalog/ProductDetail';
 import { supabase } from '@/lib/supabaseClient';
-import { Category } from '@/lib/types';
+import { Category, Product } from '@/lib/types';
+import { getPublicProducts } from '@/lib/api/products';
+import { useCart } from '@/context/CartContext';
+import { trackEvent } from '@/lib/api/analytics';
 
 // Category icon mapper
 const categoryIcons: Record<string, React.ComponentType<any>> = {
@@ -36,9 +41,15 @@ const getCategoryIcon = (name: string) => {
 export default function HomePage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  const { addItem } = useCart();
 
   useEffect(() => {
     fetchCategories();
+    fetchProducts();
   }, []);
 
   const fetchCategories = async () => {
@@ -54,6 +65,29 @@ export default function HomePage() {
     } finally {
       setLoadingCategories(false);
     }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      setLoadingProducts(true);
+      const data = await getPublicProducts();
+      setProducts(data || []);
+    } catch (e) {
+      console.error('Error fetching products for homepage:', e);
+    } finally {
+      setLoadingProducts(false);
+    }
+  };
+
+  const handleAddToCart = (product: Product, color?: string) => {
+    trackEvent(product.id, 'add_to_cart');
+    addItem(product, color);
+    setSelectedProduct(null);
+  };
+
+  const handleViewProduct = (product: Product) => {
+    trackEvent(product.id, 'view_product');
+    setSelectedProduct(product);
   };
 
   return (
@@ -73,7 +107,7 @@ export default function HomePage() {
               >
                 <div className="inline-flex items-center gap-2 rounded-full bg-primary/5 px-4 py-1.5 text-xs sm:text-sm font-bold text-primary border border-primary/10 shadow-sm">
                   <Sparkles className="h-4 w-4 text-amber-500 animate-pulse" />
-                  <span>Líderes en Guanacaste desde hace 10 años</span>
+                  <span>Líderes en Guanacaste desde hace 5 años</span>
                 </div>
                 
                 <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-neutral-900 leading-[1.05]">
@@ -114,7 +148,7 @@ export default function HomePage() {
                 className="grid grid-cols-3 gap-6 pt-10 border-t border-neutral-100 max-w-lg"
               >
                 <div className="space-y-1">
-                  <div className="text-3xl font-black text-neutral-900 tracking-tighter">10+</div>
+                  <div className="text-3xl font-black text-neutral-900 tracking-tighter">5+</div>
                   <div className="text-[10px] text-neutral-400 uppercase tracking-widest font-black">Años de Servicio</div>
                 </div>
                 <div className="space-y-1">
@@ -139,7 +173,7 @@ export default function HomePage() {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="absolute z-20 top-8 left-4 w-72 p-5 bg-white border border-neutral-100 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300"
+                className="absolute z-20 -top-8 left-4 w-72 p-5 bg-white border border-neutral-100 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300"
               >
                 <div className="aspect-video w-full rounded-2xl bg-neutral-50 flex items-center justify-center p-3 mb-4 relative overflow-hidden">
                   <img src="/cuaderno_crayola.png" alt="Cuaderno Crayola" className="h-full w-full object-contain" />
@@ -255,6 +289,14 @@ export default function HomePage() {
           )}
         </div>
       </section>
+
+      {/* Brands Section */}
+      <BrandsSection 
+        products={products}
+        loading={loadingProducts}
+        onViewDetail={handleViewProduct}
+        onAddToCart={handleAddToCart}
+      />
 
       {/* Value Pillars Section */}
       <section className="py-24 bg-neutral-50/50 border-b border-neutral-100">
@@ -380,6 +422,17 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Product Detail Modal */}
+      <AnimatePresence>
+        {selectedProduct && (
+          <ProductDetail
+            product={selectedProduct}
+            onClose={() => setSelectedProduct(null)}
+            onAddToCart={handleAddToCart}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -48,7 +48,7 @@ export const ClientLayoutWrapper = ({ children }: { children: React.ReactNode })
                 </a>
                 
                 <a 
-                  href="https://maps.app.goo.gl/eoJA4t8FUNzwXYr46" 
+                  href="https://maps.app.goo.gl/5zvyG22BUnxZKAtG7" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="group flex items-center gap-4 text-neutral-600 hover:text-primary transition-all"
