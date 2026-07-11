@@ -153,49 +153,66 @@ export const BrandsSection = ({ products, loading, onViewDetail, onAddToCart }: 
   } as const;
 
   return (
-    <section className="py-24 bg-white border-b border-neutral-100">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="relative py-28 bg-white border-b border-neutral-100 overflow-hidden">
+      {/* Decorative Glow Blobs for Premium Aesthetic */}
+      <div className="absolute top-1/4 left-10 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none -z-10" />
+      <div 
+        className="absolute bottom-10 right-10 w-80 h-80 rounded-full blur-[120px] pointer-events-none -z-10 transition-all duration-700" 
+        style={{ backgroundColor: `${selectedBrand.color}08` }}
+      />
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
-          <div>
-            <span className="text-xs font-black text-primary uppercase tracking-[0.2em] block mb-2">Marcas de Confianza</span>
-            <h2 className="text-3xl font-black text-neutral-900 tracking-tight sm:text-4xl">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-14 gap-6">
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs font-black text-primary bg-primary/5 border border-primary/10 tracking-widest uppercase">
+              <Sparkles className="h-3.5 w-3.5 animate-spin" style={{ animationDuration: '6s' }} />
+              <span>Calidad y Confianza</span>
+            </div>
+            <h2 className="text-4xl font-black text-neutral-900 tracking-tight sm:text-5xl">
               Nuestras Marcas Destacadas
             </h2>
-            <p className="mt-2 text-neutral-500 text-sm sm:text-base max-w-xl font-medium">
-              Trabajamos con los fabricantes líderes para garantizar calidad insuperable. Selecciona una marca para ver sus productos disponibles y agrégalos a tu cotización.
+            <p className="text-neutral-500 text-base sm:text-lg max-w-xl font-medium leading-relaxed">
+              Trabajamos con los fabricantes líderes del mercado para garantizar suministros excepcionales. Selecciona tu marca favorita para explorar sus productos.
             </p>
           </div>
           <Link 
             href={`/catalog?search=${encodeURIComponent(selectedBrand.name)}`}
-            className="text-primary hover:text-primary/80 font-bold text-sm flex items-center gap-1.5 transition-colors shrink-0 group self-start sm:self-end"
+            className="text-primary hover:text-primary/80 font-black text-sm flex items-center gap-1.5 transition-colors shrink-0 group self-start sm:self-end bg-primary/5 hover:bg-primary/10 px-5 py-2.5 rounded-2xl border border-primary/10"
           >
             Ver todo de {selectedBrand.name}
             <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
 
-        {/* Brands Selector Grid */}
+        {/* Brands Selector Grid — Premium interactive cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 mb-10">
           {brands.map((brand) => {
             const isSelected = brand.id === selectedBrandId;
             return (
-              <button
+              <motion.button
                 key={brand.id}
                 onClick={() => setSelectedBrandId(brand.id)}
-                className={`relative flex flex-col items-center justify-center p-4 rounded-3xl border transition-all duration-300 cursor-pointer ${
+                whileHover={{ scale: 1.05, y: -4 }}
+                whileTap={{ scale: 0.96 }}
+                className={`relative flex flex-col items-center justify-center p-5 rounded-[28px] border-2 transition-all duration-300 cursor-pointer overflow-hidden ${
                   isSelected
-                    ? 'border-neutral-200 bg-white shadow-lg'
-                    : 'border-neutral-100 bg-neutral-50/50 hover:bg-white hover:border-neutral-200 hover:shadow-md'
+                    ? 'bg-white shadow-xl scale-[1.03] z-10'
+                    : 'border-neutral-100 bg-neutral-50/40 hover:bg-white hover:border-neutral-200 hover:shadow-md'
                 }`}
                 style={{
-                  boxShadow: isSelected ? `0 10px 25px -5px ${brand.color}15, 0 8px 10px -6px ${brand.color}10` : '',
-                  borderColor: isSelected ? brand.color : ''
+                  boxShadow: isSelected ? `0 20px 30px -10px ${brand.color}25, 0 10px 15px -10px ${brand.color}15` : '',
+                  borderColor: isSelected ? brand.color : 'transparent'
                 }}
               >
+                {/* Active Soft Colored Background Glow inside button */}
+                {isSelected && (
+                  <div className="absolute inset-0 opacity-10 bg-gradient-to-br" style={{ backgroundImage: `linear-gradient(135deg, ${brand.color}, transparent)` }} />
+                )}
+
                 {/* Brand Logo Wrapper */}
-                <div className="w-full relative h-12 mb-2.5 transition-transform duration-300 flex items-center justify-center">
+                <div className="w-full relative h-14 mb-3 transition-transform duration-300 flex items-center justify-center">
                   <Image
                     src={brand.logoPath}
                     alt={brand.name}
@@ -204,43 +221,65 @@ export const BrandsSection = ({ products, loading, onViewDetail, onAddToCart }: 
                     className="object-contain p-1 rounded-lg"
                   />
                 </div>
-
+ 
                 {/* Brand Name */}
-                <span className={`text-[10px] font-black tracking-wide uppercase transition-colors text-center ${
+                <span className={`text-xs font-black tracking-wide uppercase transition-colors text-center ${
                   isSelected ? brand.textColor : 'text-neutral-500'
                 }`}>
                   {brand.name}
                 </span>
 
-                {/* Active Indicator Line */}
+                {/* Active Indicator Bar */}
                 {isSelected && (
                   <motion.div
                     layoutId="activeBrandIndicator"
-                    className="absolute -bottom-1 left-1/3 right-1/3 h-1.5 rounded-full"
+                    className="absolute bottom-0 left-6 right-6 h-1 rounded-full"
                     style={{ backgroundColor: brand.color }}
                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
-              </button>
+              </motion.button>
             );
           })}
         </div>
 
-        {/* Brand Details Bar */}
-        <div className="mb-12 p-6 rounded-3xl border border-neutral-100 bg-neutral-50/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl flex items-center justify-center font-bold text-lg shadow-sm" style={{ backgroundColor: `${selectedBrand.color}12`, color: selectedBrand.color }}>
-              <Sparkles className="h-5 w-5" />
+        {/* Brand Details Bar — Premium Glassmorphic / Gradient Layout */}
+        <div 
+          className="mb-14 p-8 rounded-[36px] border transition-all duration-500 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden"
+          style={{ 
+            borderColor: `${selectedBrand.color}20`,
+            background: `linear-gradient(135deg, ${selectedBrand.color}10, ${selectedBrand.color}03, #ffffff)`
+          }}
+        >
+          {/* Subtle logo accent on background */}
+          <div className="absolute right-0 bottom-0 top-0 w-1/3 opacity-[0.03] pointer-events-none flex items-center justify-end pr-10">
+            <img src={selectedBrand.logoPath} alt="" className="h-44 object-contain grayscale" />
+          </div>
+
+          <div className="flex items-center gap-5 relative z-10">
+            <div 
+              className="h-16 w-16 rounded-[22px] flex items-center justify-center font-bold text-lg shadow-inner transition-colors duration-500" 
+              style={{ backgroundColor: `${selectedBrand.color}18`, color: selectedBrand.color }}
+            >
+              <Sparkles className="h-7 w-7 animate-pulse" />
             </div>
             <div>
-              <h4 className="font-extrabold text-neutral-900 text-base">Colección de {selectedBrand.name}</h4>
-              <p className="text-neutral-500 text-xs sm:text-sm font-medium">{selectedBrand.desc}</p>
+              <span className="text-[10px] font-black uppercase tracking-wider block mb-0.5" style={{ color: selectedBrand.color }}>Marca Destacada</span>
+              <h4 className="font-black text-neutral-900 text-xl md:text-2xl transition-all duration-300">Colección de {selectedBrand.name}</h4>
+              <p className="text-neutral-600 text-sm md:text-base font-semibold mt-1 max-w-2xl leading-relaxed">{selectedBrand.desc}</p>
             </div>
           </div>
-          <Link href={`/catalog?search=${encodeURIComponent(selectedBrand.name)}`}>
-            <Button variant="outline" className="text-xs font-bold rounded-2xl h-10 border-neutral-200 bg-white hover:bg-neutral-50 transition-all flex items-center gap-1.5">
-              <span>Explorar todo de {selectedBrand.name}</span>
-              <ChevronRight className="h-3 w-3" />
+          <Link href={`/catalog?search=${encodeURIComponent(selectedBrand.name)}`} className="relative z-10 shrink-0">
+            <Button 
+              className="font-bold rounded-2xl h-12 px-6 shadow-md transition-all hover:scale-[1.03] active:scale-[0.97]"
+              style={{ 
+                backgroundColor: selectedBrand.color, 
+                color: '#ffffff',
+                boxShadow: `0 10px 20px -5px ${selectedBrand.color}40`
+              }}
+            >
+              <span>Explorar catálogo de {selectedBrand.name}</span>
+              <ChevronRight className="h-4 w-4 ml-1" />
             </Button>
           </Link>
         </div>

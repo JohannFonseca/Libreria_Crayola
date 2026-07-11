@@ -93,48 +93,56 @@ export default function HomePage() {
   return (
     <div className="relative overflow-hidden bg-white">
       {/* Hero Section - Split Layout */}
-      <section className="relative min-h-[90vh] flex items-center pt-20 pb-24 overflow-hidden bg-gradient-bg-soft">
+      <section className="relative min-h-[92vh] flex items-center pt-24 pb-28 overflow-hidden bg-[#fafafa]">
+        {/* Animated Custom Decorative Background Blobs & Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none" />
+        <div className="absolute top-0 inset-x-0 -z-10 h-full w-full pointer-events-none overflow-hidden">
+          <div className="absolute -top-40 left-1/4 h-[600px] w-[600px] bg-primary/10 blur-[130px] rounded-full animate-pulse" style={{ animationDuration: '8s' }} />
+          <div className="absolute top-1/3 -right-20 h-[500px] w-[500px] bg-amber-500/10 blur-[120px] rounded-full animate-pulse" style={{ animationDuration: '12s' }} />
+          <div className="absolute -bottom-20 left-10 h-[450px] w-[450px] bg-blue-500/10 blur-[100px] rounded-full animate-pulse" style={{ animationDuration: '10s' }} />
+        </div>
+
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
             {/* Left Column: Text Content */}
             <div className="lg:col-span-7 space-y-8 text-left">
               <motion.div
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
                 className="space-y-6"
               >
-                <div className="inline-flex items-center gap-2 rounded-full bg-primary/5 px-4 py-1.5 text-xs sm:text-sm font-bold text-primary border border-primary/10 shadow-sm">
-                  <Sparkles className="h-4 w-4 text-amber-500 animate-pulse" />
-                  <span>Líderes en Guanacaste desde hace 5 años</span>
+                <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary/10 to-primary/5 px-4 py-2 text-xs sm:text-sm font-extrabold text-primary border border-primary/20 shadow-md backdrop-blur-sm">
+                  <Sparkles className="h-4 w-4 text-amber-500 animate-bounce" />
+                  <span className="tracking-wide">Líderes en Guanacaste desde hace 5 años</span>
                 </div>
                 
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-neutral-900 leading-[1.05]">
+                <h1 className="text-5xl sm:text-6xl lg:text-7.5xl font-black tracking-tight text-neutral-900 leading-[1.02]">
                   Tu papelería de confianza, <br />
                   <span className="gradient-text-crayola">ahora digital.</span>
                 </h1>
                 
-                <p className="max-w-xl text-lg sm:text-xl text-neutral-500 leading-relaxed font-medium">
+                <p className="max-w-xl text-lg sm:text-xl text-neutral-500 leading-relaxed font-semibold">
                   Abastecemos su negocio, escuela u hogar con productos de la más alta calidad. 
                   Explore nuestro catálogo, cotice rápido y reciba atención personalizada en segundos.
                 </p>
               </motion.div>
               
               <motion.div 
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.15 }}
-                className="flex flex-col sm:flex-row items-center gap-4"
+                transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+                className="flex flex-col sm:flex-row items-center gap-4 pt-2"
               >
                 <Link href="/catalog" className="w-full sm:w-auto">
-                  <Button className="w-full sm:w-auto h-14 px-8 text-lg font-bold rounded-2xl gap-2 shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all group shine-effect">
+                  <Button className="w-full sm:w-auto h-16 px-10 text-lg font-black rounded-2xl gap-2.5 bg-primary hover:bg-primary/95 text-white shadow-xl shadow-primary/30 hover:shadow-primary/45 hover:scale-[1.02] active:scale-[0.98] transition-all group shine-effect">
                     Explorar Catálogo
                     <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
                 <a href="#sobre-nosotros" className="w-full sm:w-auto">
-                  <Button variant="ghost" className="w-full sm:w-auto h-14 px-8 text-lg font-bold text-neutral-600 hover:bg-neutral-100/80 rounded-2xl">
+                  <Button variant="ghost" className="w-full sm:w-auto h-16 px-8 text-lg font-bold text-neutral-600 hover:bg-neutral-100/80 rounded-2xl border border-neutral-200/60 bg-white/50 backdrop-blur-sm">
                     Nuestra Historia
                   </Button>
                 </a>
@@ -142,84 +150,107 @@ export default function HomePage() {
               
               {/* Stats Grid */}
               <motion.div 
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="grid grid-cols-3 gap-6 pt-10 border-t border-neutral-100 max-w-lg"
+                transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+                className="grid grid-cols-3 gap-6 pt-10 border-t border-neutral-200/80 max-w-lg"
               >
-                <div className="space-y-1">
-                  <div className="text-3xl font-black text-neutral-900 tracking-tighter">5+</div>
-                  <div className="text-[10px] text-neutral-400 uppercase tracking-widest font-black">Años de Servicio</div>
+                <div className="space-y-1.5">
+                  <div className="text-4xl font-black text-neutral-900 tracking-tighter bg-gradient-to-br from-neutral-900 to-neutral-700 bg-clip-text text-transparent">5+</div>
+                  <div className="text-[10px] text-neutral-400 uppercase tracking-widest font-black leading-none">Años de Servicio</div>
                 </div>
-                <div className="space-y-1">
-                  <div className="text-3xl font-black text-neutral-900 tracking-tighter">5k+</div>
-                  <div className="text-[10px] text-neutral-400 uppercase tracking-widest font-black">Productos</div>
+                <div className="space-y-1.5">
+                  <div className="text-4xl font-black text-neutral-900 tracking-tighter bg-gradient-to-br from-neutral-900 to-neutral-700 bg-clip-text text-transparent">5k+</div>
+                  <div className="text-[10px] text-neutral-400 uppercase tracking-widest font-black leading-none">Productos</div>
                 </div>
-                <div className="space-y-1">
-                  <div className="text-3xl font-black text-neutral-900 tracking-tighter">100%</div>
-                  <div className="text-[10px] text-neutral-400 uppercase tracking-widest font-black">Guanacasteco</div>
+                <div className="space-y-1.5">
+                  <div className="text-4xl font-black text-neutral-900 tracking-tighter bg-gradient-to-br from-primary to-emerald-600 bg-clip-text text-transparent">100%</div>
+                  <div className="text-[10px] text-neutral-400 uppercase tracking-widest font-black leading-none">Guanacasteco</div>
                 </div>
               </motion.div>
             </div>
             
             {/* Right Column: Interactive Showcase */}
-            <div className="lg:col-span-5 relative hidden lg:flex justify-center items-center h-[500px]">
-              {/* Decorative blobs */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[380px] bg-primary/10 rounded-full blur-[80px] -z-10 animate-pulse" />
+            <div className="lg:col-span-5 hidden lg:flex flex-col gap-6 justify-center items-center w-full relative">
+              {/* Glow effects mapped behind cards */}
+              <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-80 h-80 bg-primary/10 rounded-full blur-[80px] -z-10 animate-pulse" />
+              
+              {/* Floating Decorative Elements */}
+              <motion.div
+                animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
+                transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+                className="absolute top-0 right-12 z-30 bg-white p-3 rounded-2xl shadow-lg border border-neutral-100 flex items-center justify-center text-2xl"
+              >
+                ✏️
+              </motion.div>
+              <motion.div
+                animate={{ y: [0, 12, 0], rotate: [0, -8, 0] }}
+                transition={{ repeat: Infinity, duration: 6, ease: "easeInOut", delay: 0.5 }}
+                className="absolute bottom-0 left-6 z-30 bg-white p-3.5 rounded-2xl shadow-lg border border-neutral-100 flex items-center justify-center text-2xl"
+              >
+                🎨
+              </motion.div>
+              <motion.div
+                animate={{ scale: [1, 1.08, 1] }}
+                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                className="absolute top-1/2 -left-12 z-30 bg-white p-3 rounded-2xl shadow-lg border border-neutral-100 flex items-center justify-center text-xl"
+              >
+                📐
+              </motion.div>
               
               {/* Mockup Card 1: Product Preview */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: 40 }}
+                initial={{ opacity: 0, scale: 0.9, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="absolute z-20 -top-8 left-4 w-72 p-5 bg-white border border-neutral-100 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300"
+                className="w-full max-w-[340px] p-6 bg-white border border-neutral-150/70 rounded-[32px] shadow-[0_15px_40px_rgba(0,0,0,0.06)] hover:shadow-[0_25px_50px_rgba(16,185,129,0.12)] transition-all duration-300 group cursor-pointer"
               >
-                <div className="aspect-video w-full rounded-2xl bg-neutral-50 flex items-center justify-center p-3 mb-4 relative overflow-hidden">
-                  <img src="/cuaderno_crayola.png" alt="Cuaderno Crayola" className="h-full w-full object-contain" />
-                  <div className="absolute top-2 right-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                <div className="aspect-[4/3] w-full rounded-2xl bg-neutral-50/80 flex items-center justify-center p-4 mb-5 relative overflow-hidden group-hover:bg-neutral-50 transition-colors">
+                  <img src="/cuaderno_crayola.png" alt="Cuaderno Crayola" className="h-full w-full object-contain transform group-hover:scale-105 transition-transform duration-300" />
+                  <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-md">
                     Destacado
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-primary">Papelería Premium</span>
-                  <h4 className="font-bold text-neutral-800 text-base">Cuaderno Espiral Especial</h4>
-                  <div className="flex justify-between items-center pt-2">
-                    <span className="text-xs text-neutral-400 font-medium">Librería Crayola</span>
-                    <span className="text-[10px] text-emerald-500 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">En Stock</span>
+                <div className="space-y-2.5">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-primary">Papelería Premium</span>
+                  <h4 className="font-extrabold text-neutral-800 text-lg group-hover:text-primary transition-colors">Cuaderno Espiral Especial</h4>
+                  <div className="flex justify-between items-center pt-2.5 border-t border-neutral-100">
+                    <span className="text-xs text-neutral-400 font-bold">Librería Crayola</span>
+                    <span className="text-[10px] text-emerald-600 font-black bg-emerald-50 px-2.5 py-1 rounded-lg">En Stock</span>
                   </div>
                 </div>
               </motion.div>
               
               {/* Mockup Card 2: Quote Summary Panel */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.9, x: 40 }}
-                animate={{ opacity: 1, scale: 1, x: 0 }}
+                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.35 }}
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="absolute z-10 bottom-6 right-0 w-64 p-5 bg-white/90 backdrop-blur-md border border-white/60 rounded-3xl shadow-lg"
+                className="w-full max-w-[320px] p-6 bg-white/90 backdrop-blur-md border border-white/60 rounded-[32px] shadow-[0_15px_40px_rgba(0,0,0,0.04)] hover:shadow-[0_25px_50px_rgba(59,130,246,0.1)] transition-all duration-300 cursor-pointer lg:ml-12"
               >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                    <ShoppingBag className="h-4 w-4" />
+                <div className="flex items-center gap-3.5 mb-5">
+                  <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+                    <ShoppingBag className="h-5 w-5" />
                   </div>
                   <div>
-                    <h5 className="font-bold text-xs text-neutral-800">Tu Cotización</h5>
-                    <p className="text-[10px] text-neutral-400">Listo para WhatsApp</p>
+                    <h5 className="font-black text-sm text-neutral-850">Tu Cotización</h5>
+                    <p className="text-[10px] text-neutral-400 font-bold">Listo para WhatsApp</p>
                   </div>
                 </div>
-                <div className="space-y-2 border-t border-neutral-100 pt-3">
-                  <div className="flex justify-between text-[11px]">
-                    <span className="text-neutral-500">3x Cuadernos</span>
-                    <span className="font-semibold text-neutral-700">Seleccionado</span>
+                <div className="space-y-3 border-t border-neutral-100/80 pt-4">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-neutral-500 font-medium">3x Cuadernos</span>
+                    <span className="font-bold text-neutral-700 bg-neutral-100 px-2 py-0.5 rounded-md">Seleccionado</span>
                   </div>
-                  <div className="flex justify-between text-[11px]">
-                    <span className="text-neutral-500">1x Lapiceros Gel</span>
-                    <span className="font-semibold text-neutral-700">Seleccionado</span>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-neutral-500 font-medium">1x Lapiceros Gel</span>
+                    <span className="font-bold text-neutral-700 bg-neutral-100 px-2 py-0.5 rounded-md">Seleccionado</span>
                   </div>
-                  <div className="flex justify-between text-xs font-black border-t border-neutral-100 pt-2 text-neutral-900">
+                  <div className="flex justify-between items-center text-xs font-black border-t border-neutral-100 pt-3 text-neutral-900">
                     <span>Total Artículos</span>
-                    <span>4 unidades</span>
+                    <span className="text-primary text-sm bg-primary/5 px-2.5 py-0.5 rounded-lg">4 unidades</span>
                   </div>
                 </div>
               </motion.div>
@@ -227,13 +258,15 @@ export default function HomePage() {
             
           </div>
         </div>
-        
-        {/* Abstract Background Elements */}
-        <div className="absolute top-0 inset-x-0 -z-10 h-full w-full pointer-events-none overflow-hidden">
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 h-[600px] w-[600px] bg-primary/5 blur-[120px] rounded-full" />
-          <div className="absolute bottom-0 right-0 h-[400px] w-[400px] bg-blue-50/50 blur-[100px] rounded-full translate-x-1/2" />
-        </div>
       </section>
+
+      {/* Brands Section */}
+      <BrandsSection 
+        products={products}
+        loading={loadingProducts}
+        onViewDetail={handleViewProduct}
+        onAddToCart={handleAddToCart}
+      />
 
       {/* Categories Quick Access Section */}
       <section className="py-24 bg-white border-b border-neutral-100">
@@ -289,14 +322,6 @@ export default function HomePage() {
           )}
         </div>
       </section>
-
-      {/* Brands Section */}
-      <BrandsSection 
-        products={products}
-        loading={loadingProducts}
-        onViewDetail={handleViewProduct}
-        onAddToCart={handleAddToCart}
-      />
 
       {/* Value Pillars Section */}
       <section className="py-24 bg-neutral-50/50 border-b border-neutral-100">

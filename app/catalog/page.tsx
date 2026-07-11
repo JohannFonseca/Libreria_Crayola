@@ -192,9 +192,37 @@ function CatalogContent() {
 
   // Sidebar / Drawer filters template
   const FiltersContent = () => (
-    <div className="space-y-8 bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm">
+    <div className="space-y-6 bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm">
+
+      {/* Brands Section — PRIMERO */}
+      <div className="space-y-3">
+        <h4 className="font-extrabold text-xs text-neutral-400 uppercase tracking-widest flex items-center gap-2">
+          <Tag className="h-3.5 w-3.5 text-primary" />
+          <span>Marcas</span>
+        </h4>
+        <div className="flex flex-wrap gap-2">
+          {AVAILABLE_BRANDS.map((brand) => {
+            const isChecked = selectedBrands.includes(brand.query);
+            return (
+              <button
+                key={brand.query}
+                onClick={() => handleToggleBrand(brand.query)}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-extrabold border transition-all duration-200 shadow-sm ${
+                  isChecked
+                    ? 'bg-primary text-white border-primary shadow-primary/30 shadow-md scale-105'
+                    : 'bg-white text-neutral-600 border-neutral-200 hover:border-primary/50 hover:text-primary hover:bg-primary/5'
+                }`}
+              >
+                {isChecked && <Check className="h-3 w-3 stroke-[3]" />}
+                {brand.name}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Category Section */}
-      <div className="space-y-4">
+      <div className="space-y-4 pt-5 border-t border-neutral-100">
         <h4 className="font-extrabold text-xs text-neutral-400 uppercase tracking-widest flex items-center gap-2">
           <span>Categorías</span>
         </h4>
@@ -220,46 +248,8 @@ function CatalogContent() {
         </div>
       </div>
 
-      {/* Brands Section */}
-      <div className="space-y-4 pt-6 border-t border-neutral-100">
-        <h4 className="font-extrabold text-xs text-neutral-400 uppercase tracking-widest">
-          Marcas
-        </h4>
-        <div className="relative">
-          <div className="flex flex-col gap-2 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar pb-6">
-            {AVAILABLE_BRANDS.map((brand) => {
-              const isChecked = selectedBrands.includes(brand.query);
-              return (
-                <button
-                  key={brand.query}
-                  onClick={() => handleToggleBrand(brand.query)}
-                  className="flex items-center gap-3 text-left text-sm py-1.5 px-1 rounded-lg group transition-all"
-                >
-                  <div className={`h-5 w-5 rounded-md border flex items-center justify-center transition-all ${
-                    isChecked 
-                      ? 'bg-primary border-primary text-white' 
-                      : 'border-neutral-300 bg-white group-hover:border-neutral-400'
-                  }`}>
-                    {isChecked && <Check className="h-3 w-3 stroke-[3]" />}
-                  </div>
-                  <span className={`font-bold transition-colors ${
-                    isChecked ? 'text-neutral-900' : 'text-neutral-600 group-hover:text-neutral-900'
-                  }`}>
-                    {brand.name}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-          {/* Fade indicator at bottom */}
-          <div className="absolute bottom-0 left-0 right-2 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" />
-        </div>
-      </div>
-
-
-
       {/* Featured Section */}
-      <div className="space-y-4 pt-6 border-t border-neutral-100">
+      <div className="space-y-4 pt-5 border-t border-neutral-100">
         <button
           onClick={() => setOnlyFeatured(prev => !prev)}
           className="flex items-center justify-between w-full text-left py-1"
@@ -279,7 +269,7 @@ function CatalogContent() {
       </div>
 
       {/* Reset button */}
-      <div className="pt-6 border-t border-neutral-100">
+      <div className="pt-5 border-t border-neutral-100">
         <Button
           variant="outline"
           onClick={handleResetFilters}
@@ -308,6 +298,7 @@ function CatalogContent() {
           </p>
         </motion.div>
       </header>
+
 
       {/* Dynamic Products Showcase & Filter Split Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
