@@ -66,8 +66,19 @@ export const ClientLayoutWrapper = ({ children }: { children: React.ReactNode })
               </div>
             </div>
 
-            <div className="text-sm text-neutral-500 self-center">
-              &copy; {new Date().getFullYear()} Librería Crayola. Todos los derechos reservados.
+            <div className="text-sm text-neutral-500 self-center flex flex-col items-center md:items-end gap-1 text-center md:text-right">
+              <span>&copy; {new Date().getFullYear()} Librería Crayola. Todos los derechos reservados.</span>
+              <span className="text-xs text-neutral-400">
+                Una creación de{' '}
+                <a 
+                  href="https://nexuracr.dev" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-primary hover:underline font-semibold"
+                >
+                  Nexuracr.dev
+                </a>
+              </span>
             </div>
           </div>
         </div>
