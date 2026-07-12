@@ -13,6 +13,7 @@ import { supabase } from '@/lib/supabaseClient';
 export default function AdminProductsPage() {
   const [products, setProducts] = React.useState<Product[]>([]);
   const [categories, setCategories] = React.useState<any[]>([]);
+  const [brands, setBrands] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [loadingMore, setLoadingMore] = React.useState(false);
   const [totalCount, setTotalCount] = React.useState(0);
@@ -20,7 +21,7 @@ export default function AdminProductsPage() {
   const [dbVisibles, setDbVisibles] = React.useState(0);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'visibles' | 'ocultos'>('todos');
-  const [clientFilter, setClientFilter] = React.useState<'todos' | 'normal' | 'empresa'>('todos');
+  const [brandFilter, setBrandFilter] = React.useState<string>('todas');
   const [showModal, setShowModal] = React.useState(false);
   const [editingProduct, setEditingProduct] = React.useState<Product | undefined>(undefined);
   
@@ -28,6 +29,7 @@ export default function AdminProductsPage() {
 
   React.useEffect(() => {
     fetchCategories();
+    fetchBrands();
     fetchAbsoluteTotals();
   }, []);
 
@@ -44,11 +46,16 @@ export default function AdminProductsPage() {
       fetchProducts();
     }, 400);
     return () => clearTimeout(timer);
-  }, [searchTerm, statusFilter, clientFilter]);
+  }, [searchTerm, statusFilter, brandFilter]);
 
   const fetchCategories = async () => {
     const { data } = await supabase.from('categories').select('*');
     setCategories(data || []);
+  };
+
+  const fetchBrands = async () => {
+    const { data } = await supabase.from('brands').select('*').order('name');
+    setBrands(data || []);
   };
 
   const fetchProducts = async (isLoadMore = false) => {
@@ -62,7 +69,7 @@ export default function AdminProductsPage() {
       const { products: newProducts, count } = await getAllProductsAdmin(from, to, {
         searchTerm,
         status: statusFilter,
-        client: clientFilter
+        brandId: brandFilter
       });
       
       if (isLoadMore) {
@@ -145,12 +152,13 @@ export default function AdminProductsPage() {
         <ProductModal
           product={editingProduct}
           categories={categories}
+          brands={brands}
           onClose={() => setShowModal(false)}
           onSuccess={fetchProducts}
         />
       )}
 
-      <Card className="p-0 border-neutral-200 overflow-hidden shadow-sm">
+      <Card hover={false} className="p-0 border-neutral-200 overflow-hidden shadow-sm">
         <div className="p-4 sm:p-6 border-b border-neutral-200 bg-white flex flex-col md:flex-row gap-4 justify-between items-center">
           <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
             <div className="relative w-full md:w-96">
@@ -182,30 +190,32 @@ export default function AdminProductsPage() {
             </select>
 
             <select
-              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none min-w-[140px]"
-              value={clientFilter}
-              onChange={(e) => setClientFilter(e.target.value as any)}
+              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none min-w-[140px] bg-white"
+              value={brandFilter}
+              onChange={(e) => setBrandFilter(e.target.value)}
             >
-              <option value="todos">Cualquier Cliente</option>
-              <option value="normal">👤 Normal</option>
-              <option value="empresa">🏢 Empresa</option>
+              <option value="todas">Todas las marcas</option>
+              <option value="sin_marca">Sin marca asignada</option>
+              {brands.map((b) => (
+                <option key={b.id} value={b.id}>{b.name}</option>
+              ))}
             </select>
           </div>
         </div>
 
-        <div className="overflow-x-auto min-h-[400px]">
-          <table className="w-full text-left border-collapse min-w-[1000px]">
+        <div className="w-full overflow-x-auto min-h-[400px]">
+          <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-neutral-200 bg-neutral-50/80 text-neutral-500">
-                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-20">Img</th>
-                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider">Producto</th>
-                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-32">Código</th>
-                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-40">Categoría</th>
-                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-40">Audiencia</th>
+                <th className="px-2.5 py-3 text-xs font-semibold uppercase tracking-wider w-16">Img</th>
+                <th className="px-2.5 py-3 text-xs font-semibold uppercase tracking-wider w-72">Producto</th>
+                <th className="px-2.5 py-3 text-xs font-semibold uppercase tracking-wider w-28">Código</th>
+                <th className="px-2.5 py-3 text-xs font-semibold uppercase tracking-wider w-36">Categoría</th>
+                <th className="px-2.5 py-3 text-xs font-semibold uppercase tracking-wider w-36">Marca</th>
 
-                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-24">Destacar</th>
-                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider w-32">Web</th>
-                <th className="px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-right w-24">Acciones</th>
+                <th className="px-2.5 py-3 text-xs font-semibold uppercase tracking-wider text-center w-20">Destacar</th>
+                <th className="px-2.5 py-3 text-xs font-semibold uppercase tracking-wider w-24">Web</th>
+                <th className="px-2.5 py-3 text-xs font-semibold uppercase tracking-wider text-right w-24">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100 bg-white">
@@ -230,6 +240,7 @@ export default function AdminProductsPage() {
                     key={product.id}
                     product={product}
                     categories={categories}
+                    brands={brands}
                     onUpdate={handleInlineUpdate}
                     onEdit={(p) => {
                       setEditingProduct(p);

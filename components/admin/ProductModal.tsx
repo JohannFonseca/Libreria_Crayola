@@ -11,16 +11,17 @@ import { createProduct, updateProduct } from '@/lib/api/products';
 interface ProductModalProps {
   product?: Product;
   categories: any[];
+  brands: any[];
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export const ProductModal = ({ product, categories, onClose, onSuccess }: ProductModalProps) => {
+export const ProductModal = ({ product, categories, brands = [], onClose, onSuccess }: ProductModalProps) => {
   const [name, setName] = React.useState(product?.name || '');
   const [description, setDescription] = React.useState(product?.description || '');
   const [categoryId, setCategoryId] = React.useState(product?.category_id || '');
+  const [brandId, setBrandId] = React.useState(product?.brand_id || '');
   const [precioVenta, setPrecioVenta] = React.useState(product?.precio_venta?.toString() || '');
-  const [tipoCliente, setTipoCliente] = React.useState<'normal' | 'empresa' | 'ambos'>(product?.tipo_cliente || 'ambos');
   const [visible, setVisible] = React.useState(product?.visible_en_web || false);
   const [destacado, setDestacado] = React.useState(product?.destacado || false);
   const [barcode, setBarcode] = React.useState(product?.barcode || '');
@@ -55,9 +56,10 @@ export const ProductModal = ({ product, categories, onClose, onSuccess }: Produc
         name,
         description,
         category_id: categoryId || null,
+        brand_id: brandId || null,
         image_url: imageUrl,
         precio_venta: precioVenta ? parseFloat(precioVenta) : null,
-        tipo_cliente: tipoCliente,
+        tipo_cliente: 'ambos',
         visible_en_web: visible,
         destacado: destacado,
         barcode: barcode || null,
@@ -120,17 +122,22 @@ export const ProductModal = ({ product, categories, onClose, onSuccess }: Produc
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Tipo de Cliente (Opcional)</label>
+                  <label className="block text-sm font-medium mb-1">Marca (Opcional)</label>
                   <select
                     className="w-full rounded-xl border border-neutral-200 px-4 py-2 focus:border-primary focus:outline-none bg-white"
-                    value={tipoCliente}
-                    onChange={(e) => setTipoCliente(e.target.value as 'normal' | 'empresa' | 'ambos')}
+                    value={brandId}
+                    onChange={(e) => setBrandId(e.target.value)}
                   >
-                    <option value="ambos">Ambos (Público General)</option>
-                    <option value="normal">Solo Normal</option>
-                    <option value="empresa">Solo Empresa</option>
+                    <option value="">Sin marca</option>
+                    {brands.map((brand) => (
+                      <option key={brand.id} value={brand.id}>
+                        {brand.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
+
+
                 
 
 

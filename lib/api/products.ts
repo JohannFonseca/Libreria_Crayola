@@ -5,7 +5,7 @@ import { Product } from '../types';
 export const getPublicProducts = async () => {
   const { data, error } = await supabase
     .from('products')
-    .select('*, categories(*), product_colors(*)')
+    .select('*, categories(*), product_colors(*), brands(*)')
     .eq('visible_en_web', true)
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false });
@@ -17,18 +17,16 @@ export const getPublicProducts = async () => {
   return data;
 };
 
-// Obtiene los productos con paginación y filtros (para el panel admin)
 export const getAllProductsAdmin = async (
   from = 0, 
   to = 199, 
-  filters: { searchTerm?: string, status?: string, client?: string } = {}
+  filters: { searchTerm?: string, status?: string, brandId?: string } = {}
 ) => {
   let query = supabase
     .from('products')
-    .select('*, categories(*), product_colors(*)', { count: 'exact' });
+    .select('*, categories(*), product_colors(*), brands(*)', { count: 'exact' });
 
   if (filters.searchTerm) {
-    // Búsqueda por nombre o código de barras (usando * para wildcards en or)
     const term = `*${filters.searchTerm}*`;
     query = query.or(`name.ilike.${term},barcode.ilike.${term}`);
   }
@@ -39,9 +37,15 @@ export const getAllProductsAdmin = async (
     query = query.eq('visible_en_web', false);
   }
 
-  if (filters.client && filters.client !== 'todos') {
-    query = query.eq('tipo_cliente', filters.client);
+  if (filters.brandId && filters.brandId !== 'todas') {
+    if (filters.brandId === 'sin_marca') {
+      query = query.is('brand_id', null);
+    } else {
+      query = query.eq('brand_id', filters.brandId);
+    }
   }
+
+
 
   const { data, error, count } = await query
     .order('created_at', { ascending: false })
@@ -57,7 +61,7 @@ export const getAllProductsAdmin = async (
 export const getProductById = async (id: string) => {
   const { data, error } = await supabase
     .from('products')
-    .select('*, categories(*), product_colors(*)')
+    .select('*, categories(*), product_colors(*), brands(*)')
     .eq('id', id)
     .single();
 

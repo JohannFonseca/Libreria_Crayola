@@ -11,10 +11,11 @@ import { ProductDetail } from '@/components/catalog/ProductDetail';
 import { FeaturedSection } from '@/components/catalog/FeaturedSection';
 import { ProductCardSkeleton } from '@/components/catalog/ProductCardSkeleton';
 import { Button } from '@/components/ui/Button';
-import { Product } from '@/lib/types';
+import { Product, Brand } from '@/lib/types';
 import { useCart } from '@/context/CartContext';
 import { getPublicProducts } from '@/lib/api/products';
 import { trackEvent } from '@/lib/api/analytics';
+import { supabase } from '@/lib/supabaseClient';
 
 // Accent normalization helper to make search accent-insensitive
 const normalizeText = (text: string) => {
@@ -24,26 +25,19 @@ const normalizeText = (text: string) => {
     .replace(/[\u0300-\u036f]/g, '');
 };
 
-const AVAILABLE_BRANDS = [
-  { name: 'Crayola', query: 'crayola' },
-  { name: 'Norma', query: 'norma' },
-  { name: 'BIC', query: 'bic' },
-  { name: 'El Líder', query: 'lider' },
-  { name: 'Resistol', query: 'resistol' },
-  { name: 'Skipper', query: 'skipper' },
-  { name: 'Articolor', query: 'articolor' },
-  { name: 'Chenson', query: 'chenson' }
-];
+// Removed hardcoded AVAILABLE_BRANDS, now fetching from database
 
 function CatalogContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const categoryParam = searchParams.get('category');
   const searchParam = searchParams.get('search');
+  const brandIdParam = searchParams.get('brandId');
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [dbBrands, setDbBrands] = useState<Brand[]>([]);
   const [minPrice, setMinPrice] = useState<string>('');
   const [maxPrice, setMaxPrice] = useState<string>('');
   const [onlyFeatured, setOnlyFeatured] = useState<boolean>(false);
@@ -58,9 +52,23 @@ function CatalogContent() {
 
   useEffect(() => {
     fetchProducts();
+    fetchBrands();
   }, []);
 
-  // Pre-select category or search term if set in query parameters
+  const fetchBrands = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('brands')
+        .select('*')
+        .order('name');
+      if (error) throw error;
+      setDbBrands(data || []);
+    } catch (e) {
+      console.error('Error fetching brands for catalog page:', e);
+    }
+  };
+
+  // Pre-select category, search term or brand if set in query parameters
   useEffect(() => {
     if (categoryParam) {
       setSelectedCategory(categoryParam);
@@ -68,7 +76,10 @@ function CatalogContent() {
     if (searchParam) {
       setSearchTerm(searchParam);
     }
-  }, [categoryParam, searchParam]);
+    if (brandIdParam) {
+      setSelectedBrands([brandIdParam]);
+    }
+  }, [categoryParam, searchParam, brandIdParam]);
 
   // Reset visibleCount back to 20 whenever any search or filter state changes
   useEffect(() => {
@@ -109,9 +120,23 @@ function CatalogContent() {
       const matchesCategory = selectedCategory === 'Todas' || p.categories?.name === selectedCategory;
       
       // 3. Brands check
-      const matchesBrands = selectedBrands.length === 0 || selectedBrands.some(brandQuery => {
-        const normBrand = normalizeText(brandQuery);
-        return normName.includes(normBrand) || normDescription.includes(normBrand);
+      const matchesBrands = selectedBrands.length === 0 || selectedBrands.some(brandId => {
+        // If product has brand_id assigned, check exact match
+        if (p.brand_id && p.brand_id === brandId) return true;
+        
+        // Fallback: Check if product name or description matches brand name as a whole word
+        if (!p.brand_id) {
+          const brandObj = dbBrands.find(b => b.id === brandId);
+          if (!brandObj) return false;
+          const normBrandName = normalizeText(brandObj.name || '');
+          try {
+            const regex = new RegExp('\\b' + normBrandName + '\\b', 'i');
+            return regex.test(normName) || regex.test(normDescription);
+          } catch (e) {
+            return normName.includes(normBrandName) || normDescription.includes(normBrandName);
+          }
+        }
+        return false;
       });
       
       // 4. Price range check
@@ -124,7 +149,7 @@ function CatalogContent() {
       
       return matchesSearch && matchesCategory && matchesBrands && matchesMinPrice && matchesMaxPrice && matchesFeatured;
     });
-  }, [products, searchTerm, selectedCategory, selectedBrands, minPrice, maxPrice, onlyFeatured]);
+  }, [products, searchTerm, selectedCategory, selectedBrands, dbBrands, minPrice, maxPrice, onlyFeatured]);
 
   const displayedProducts = useMemo(() => {
     return filteredProducts.slice(0, visibleCount);
@@ -201,16 +226,16 @@ function CatalogContent() {
           <span>Marcas</span>
         </h4>
         <div className="flex flex-wrap gap-2">
-          {AVAILABLE_BRANDS.map((brand) => {
-            const isChecked = selectedBrands.includes(brand.query);
+          {dbBrands.map((brand) => {
+            const isChecked = selectedBrands.includes(brand.id);
             return (
               <button
-                key={brand.query}
-                onClick={() => handleToggleBrand(brand.query)}
+                key={brand.id}
+                onClick={() => handleToggleBrand(brand.id)}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-extrabold border transition-all duration-200 shadow-sm ${
                   isChecked
                     ? 'bg-primary text-white border-primary shadow-primary/30 shadow-md scale-105'
-                    : 'bg-white text-neutral-600 border-neutral-200 hover:border-primary/50 hover:text-primary hover:bg-primary/5'
+                    : 'bg-white text-neutral-600 border-neutral-200 hover:border-primary/55 hover:text-primary hover:bg-primary/5'
                 }`}
               >
                 {isChecked && <Check className="h-3 w-3 stroke-[3]" />}
@@ -356,12 +381,12 @@ function CatalogContent() {
               )}
 
               {/* Brand chips */}
-              {selectedBrands.map((brandQuery) => {
-                const brandObj = AVAILABLE_BRANDS.find(b => b.query === brandQuery);
+              {selectedBrands.map((brandId) => {
+                const brandObj = dbBrands.find(b => b.id === brandId);
                 return (
-                  <div key={brandQuery} className="inline-flex items-center gap-1 bg-neutral-100 text-neutral-800 text-xs font-bold px-3 py-1 rounded-full border border-neutral-200">
-                    <span>Marca: {brandObj?.name || brandQuery}</span>
-                    <button onClick={() => handleToggleBrand(brandQuery)} className="hover:text-primary">
+                  <div key={brandId} className="inline-flex items-center gap-1 bg-neutral-100 text-neutral-800 text-xs font-bold px-3 py-1 rounded-full border border-neutral-200">
+                    <span>Marca: {brandObj?.name || brandId}</span>
+                    <button onClick={() => handleToggleBrand(brandId)} className="hover:text-primary">
                       <X className="h-3 w-3" />
                     </button>
                   </div>

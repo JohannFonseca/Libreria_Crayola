@@ -119,8 +119,8 @@ export default function HomePage() {
                 </div>
                 
                 <h1 className="text-5xl sm:text-6xl lg:text-7.5xl font-black tracking-tight text-neutral-900 leading-[1.02]">
-                  Tu papelería de confianza, <br />
-                  <span className="gradient-text-crayola">ahora digital.</span>
+                  Tu proveedor de confianza <br />
+                  <span className="gradient-text-crayola">en suministros.</span>
                 </h1>
                 
                 <p className="max-w-xl text-lg sm:text-xl text-neutral-500 leading-relaxed font-semibold">
@@ -179,78 +179,58 @@ export default function HomePage() {
               <motion.div
                 animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
                 transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-                className="absolute top-0 right-12 z-30 bg-white p-3 rounded-2xl shadow-lg border border-neutral-100 flex items-center justify-center text-2xl"
+                className="absolute top-4 right-12 z-30 bg-white p-3 rounded-2xl shadow-lg border border-neutral-100 flex items-center justify-center text-2xl"
               >
                 ✏️
               </motion.div>
               <motion.div
                 animate={{ y: [0, 12, 0], rotate: [0, -8, 0] }}
                 transition={{ repeat: Infinity, duration: 6, ease: "easeInOut", delay: 0.5 }}
-                className="absolute bottom-0 left-6 z-30 bg-white p-3.5 rounded-2xl shadow-lg border border-neutral-100 flex items-center justify-center text-2xl"
+                className="absolute bottom-4 -left-12 z-30 bg-white p-3.5 rounded-2xl shadow-lg border border-neutral-100 flex items-center justify-center text-2xl"
               >
                 🎨
               </motion.div>
               <motion.div
                 animate={{ scale: [1, 1.08, 1] }}
                 transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                className="absolute top-1/2 -left-12 z-30 bg-white p-3 rounded-2xl shadow-lg border border-neutral-100 flex items-center justify-center text-xl"
+                className="absolute top-1/2 -left-10 z-30 bg-white p-3 rounded-2xl shadow-lg border border-neutral-100 flex items-center justify-center text-xl"
               >
                 📐
               </motion.div>
               
-              {/* Mockup Card 1: Product Preview */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.2 }}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="w-full max-w-[340px] p-6 bg-white border border-neutral-150/70 rounded-[32px] shadow-[0_15px_40px_rgba(0,0,0,0.06)] hover:shadow-[0_25px_50px_rgba(16,185,129,0.12)] transition-all duration-300 group cursor-pointer"
-              >
-                <div className="aspect-[4/3] w-full rounded-2xl bg-neutral-50/80 flex items-center justify-center p-4 mb-5 relative overflow-hidden group-hover:bg-neutral-50 transition-colors">
-                  <img src="/cuaderno_crayola.png" alt="Cuaderno Crayola" className="h-full w-full object-contain transform group-hover:scale-105 transition-transform duration-300" />
-                  <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-md">
-                    Destacado
-                  </div>
-                </div>
-                <div className="space-y-2.5">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-primary">Papelería Premium</span>
-                  <h4 className="font-extrabold text-neutral-800 text-lg group-hover:text-primary transition-colors">Cuaderno Espiral Especial</h4>
-                  <div className="flex justify-between items-center pt-2.5 border-t border-neutral-100">
-                    <span className="text-xs text-neutral-400 font-bold">Librería Crayola</span>
-                    <span className="text-[10px] text-emerald-600 font-black bg-emerald-50 px-2.5 py-1 rounded-lg">En Stock</span>
-                  </div>
-                </div>
-              </motion.div>
-              
-              {/* Mockup Card 2: Quote Summary Panel */}
+              {/* Mockup Card: Quote Summary Panel */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.35 }}
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="w-full max-w-[320px] p-6 bg-white/90 backdrop-blur-md border border-white/60 rounded-[32px] shadow-[0_15px_40px_rgba(0,0,0,0.04)] hover:shadow-[0_25px_50px_rgba(59,130,246,0.1)] transition-all duration-300 cursor-pointer lg:ml-12"
+                className="w-full max-w-[420px] p-10 bg-white border border-neutral-200/60 rounded-[36px] shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:shadow-[0_30px_60px_rgba(16,185,129,0.15)] transition-all duration-300 cursor-pointer relative z-20"
               >
-                <div className="flex items-center gap-3.5 mb-5">
-                  <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
-                    <ShoppingBag className="h-5 w-5" />
+                <div className="flex items-center gap-4.5 mb-7">
+                  <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+                    <ShoppingBag className="h-7 w-7" />
                   </div>
                   <div>
-                    <h5 className="font-black text-sm text-neutral-850">Tu Cotización</h5>
-                    <p className="text-[10px] text-neutral-400 font-bold">Listo para WhatsApp</p>
+                    <h5 className="font-black text-xl text-neutral-800">Tu Cotización</h5>
+                    <p className="text-xs text-neutral-400 font-extrabold mt-0.5">Listo para WhatsApp</p>
                   </div>
                 </div>
-                <div className="space-y-3 border-t border-neutral-100/80 pt-4">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-neutral-500 font-medium">3x Cuadernos</span>
-                    <span className="font-bold text-neutral-700 bg-neutral-100 px-2 py-0.5 rounded-md">Seleccionado</span>
+                <div className="space-y-4 border-t border-neutral-100/80 pt-6">
+                  <div className="flex justify-between items-center text-base">
+                    <span className="text-neutral-600 font-semibold">3x Cuadernos</span>
+                    <span className="text-[11px] font-black text-neutral-700 bg-neutral-100 px-3 py-1 rounded-lg">Seleccionado</span>
                   </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-neutral-500 font-medium">1x Lapiceros Gel</span>
-                    <span className="font-bold text-neutral-700 bg-neutral-100 px-2 py-0.5 rounded-md">Seleccionado</span>
+                  <div className="flex justify-between items-center text-base">
+                    <span className="text-neutral-600 font-semibold">1x Lapiceros Gel</span>
+                    <span className="text-[11px] font-black text-neutral-700 bg-neutral-100 px-3 py-1 rounded-lg">Seleccionado</span>
                   </div>
-                  <div className="flex justify-between items-center text-xs font-black border-t border-neutral-100 pt-3 text-neutral-900">
+                  <div className="flex justify-between items-center text-base">
+                    <span className="text-neutral-600 font-semibold">2x Témperas Crayola</span>
+                    <span className="text-[11px] font-black text-neutral-700 bg-neutral-100 px-3 py-1 rounded-lg">Seleccionado</span>
+                  </div>
+                  <div className="flex justify-between items-center text-base font-black border-t border-neutral-100 pt-5 text-neutral-900">
                     <span>Total Artículos</span>
-                    <span className="text-primary text-sm bg-primary/5 px-2.5 py-0.5 rounded-lg">4 unidades</span>
+                    <span className="text-primary text-base bg-primary/5 px-3.5 py-1 rounded-xl">6 unidades</span>
                   </div>
                 </div>
               </motion.div>

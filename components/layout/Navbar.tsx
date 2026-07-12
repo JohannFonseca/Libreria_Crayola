@@ -27,40 +27,38 @@ export const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-neutral-200/50 bg-white/75 backdrop-blur-lg shadow-sm transition-all duration-300">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-10">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-10 w-auto sm:h-12 transition-transform duration-300 group-hover:scale-105 flex items-center justify-center">
-              <img src="/LogoGrande.png" alt="Logo" className="h-full w-auto object-contain mix-blend-multiply" />
-            </div>
-            <span className="text-xl font-black tracking-tight text-neutral-900 sm:text-2xl group-hover:text-primary transition-colors duration-300">
-              Librería <span className="text-primary">Crayola</span>
-            </span>
-          </Link>
-
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => {
-              const active = isLinkActive(link.path);
-              return (
-                <Link
-                  key={link.path}
-                  href={link.path}
-                  className={`relative py-2 text-sm font-semibold tracking-wide transition-colors duration-300 ${
-                    active ? 'text-primary' : 'text-neutral-500 hover:text-neutral-900'
-                  }`}
-                >
-                  {link.label}
-                  {active && (
-                    <motion.div
-                      layoutId="activeNavIndicator"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </Link>
-              );
-            })}
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 relative">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="relative h-10 w-auto sm:h-12 transition-transform duration-300 group-hover:scale-105 flex items-center justify-center">
+            <img src="/LogoGrande.png" alt="Logo" className="h-full w-auto object-contain mix-blend-multiply" />
           </div>
+          <span className="text-xl font-black tracking-tight text-neutral-900 sm:text-2xl group-hover:text-primary transition-colors duration-300">
+            Librería <span className="text-primary">Crayola</span>
+          </span>
+        </Link>
+
+        <div className="hidden md:flex items-center gap-8 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          {navLinks.map((link) => {
+            const active = isLinkActive(link.path);
+            return (
+              <Link
+                key={link.path}
+                href={link.path}
+                className={`relative py-2 text-sm font-semibold tracking-wide transition-colors duration-300 ${
+                  active ? 'text-primary' : 'text-neutral-500 hover:text-neutral-900'
+                }`}
+              >
+                {link.label}
+                {active && (
+                  <motion.div
+                    layoutId="activeNavIndicator"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </Link>
+            );
+          })}
         </div>
 
         <div className="flex items-center gap-3">

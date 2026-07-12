@@ -75,7 +75,7 @@ export default function CartPage() {
                   
                   {/* Product Details */}
                   <div className="flex-1 space-y-1">
-                    <h3 className="font-bold text-base sm:text-lg text-neutral-850 leading-tight">{item.name}</h3>
+                    <h3 className="font-bold text-base sm:text-lg text-neutral-800 leading-tight">{item.name}</h3>
                     <div className="flex flex-wrap gap-2.5 items-center">
                       {item.selectedColor && (
                         <Badge variant="secondary" className="bg-neutral-100 text-neutral-600 border-none text-[9px] font-black rounded-md uppercase py-0.5 px-2">

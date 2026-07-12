@@ -5,14 +5,27 @@ export interface Category {
   created_at: string;
 }
 
+export interface Brand {
+  id: string;
+  name: string;
+  description: string | null;
+  logo_url: string | null;
+  color: string;
+  bg_color: string;
+  text_color: string;
+  visible_en_web?: boolean;
+  created_at: string;
+}
+
 export interface Product {
   id: string;
   name: string;
   description: string;
-  category_id: string;
+  category_id?: string | null;
+  brand_id?: string | null;
   image_url: string;
   precio_venta: number | null;
-  tipo_cliente: 'normal' | 'empresa' | 'ambos';
+  tipo_cliente?: 'normal' | 'empresa' | 'ambos';
   visible_en_web: boolean;
   destacado: boolean;
   sort_order: number;
@@ -20,6 +33,7 @@ export interface Product {
   created_at: string;
   colors?: ProductColor[];
   categories?: Category;
+  brands?: Brand;
 }
 
 export interface ProductColor {
