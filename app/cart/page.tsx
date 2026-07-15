@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Trash2, Plus, Minus, FileText, Send, ArrowLeft, MapPin, ShoppingBag } from 'lucide-react';
+import { Trash2, Plus, Minus, FileText, Send, ArrowLeft, MapPin, ShoppingBag, User } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -141,22 +141,36 @@ export default function CartPage() {
             <div className="mb-8 space-y-3">
               <label className="text-xs font-black uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
                 <MapPin className="h-4 w-4 text-primary" />
-                Seleccionar sucursal
+                Enviar cotización a
               </label>
-              <div className="grid grid-cols-2 gap-2 bg-neutral-200/50 rounded-xl p-1 shadow-inner">
-                {(Object.keys(BRANCHES) as BranchId[]).map((id) => (
-                  <button
-                    key={id}
-                    onClick={() => setSelectedBranch(id)}
-                    className={`px-3 py-2 text-xs font-bold rounded-lg transition-all duration-300 ${
-                      selectedBranch === id
-                        ? 'bg-white text-primary shadow-sm scale-102'
-                        : 'text-neutral-500 hover:text-neutral-800'
-                    }`}
-                  >
-                    {BRANCHES[id].name}
-                  </button>
-                ))}
+              <div className="flex flex-col gap-2.5">
+                {(Object.keys(BRANCHES) as BranchId[]).map((id) => {
+                  const isSelected = selectedBranch === id;
+                  const Icon = id === 'giovanny' ? User : MapPin;
+                  return (
+                    <button
+                      key={id}
+                      onClick={() => setSelectedBranch(id)}
+                      className={`w-full flex items-center gap-3.5 p-3.5 text-left rounded-2xl border transition-all duration-300 hover:scale-[1.01] ${
+                        isSelected
+                          ? 'border-primary/40 bg-primary/5 text-primary shadow-sm'
+                          : 'border-neutral-200/60 bg-white text-neutral-600 hover:bg-neutral-50 hover:border-neutral-300'
+                      }`}
+                    >
+                      <div className={`p-2 rounded-xl transition-colors duration-300 ${isSelected ? 'bg-primary/10 text-primary' : 'bg-neutral-100 text-neutral-400'}`}>
+                        <Icon className="h-4.5 w-4.5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs sm:text-sm font-black tracking-tight">
+                          {BRANCHES[id].name}
+                        </div>
+                        <div className="text-[10px] text-neutral-400 font-bold mt-0.5">
+                          {BRANCHES[id].label}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -182,7 +196,7 @@ export default function CartPage() {
             </div>
 
             <p className="mt-6 text-[10px] text-neutral-400 text-center leading-normal font-medium max-w-xs mx-auto">
-              La cotización se enviará de forma automática al número oficial de la sucursal seleccionada.
+              La cotización se enviará de forma automática al número oficial del destino seleccionado.
             </p>
           </Card>
         </div>

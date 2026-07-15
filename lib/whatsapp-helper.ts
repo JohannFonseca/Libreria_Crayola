@@ -3,11 +3,18 @@ import { CartItem } from './types';
 export const BRANCHES = {
   liberia: {
     name: 'Liberia',
-    phone: '50684466444'
+    phone: '50684466444',
+    label: 'Sucursal'
   },
   bagaces: {
     name: 'Bagaces',
-    phone: '50686179090'
+    phone: '50686179090',
+    label: 'Sucursal'
+  },
+  giovanny: {
+    name: 'Giovanny',
+    phone: '50688439653',
+    label: 'Ejecutivo de Ventas'
   }
 };
 
@@ -38,7 +45,11 @@ export const generateWhatsAppLink = (items: CartItem[], branchId: BranchId = 'li
 
   message += '-------------------------------------------\n\n';
   message += `Total de artículos: ${totalItems}\n`;
-  message += `Sucursal: ${branch.name}\n\n`;
+  if (branchId === 'giovanny') {
+    message += `Ejecutivo: ${branch.name}\n\n`;
+  } else {
+    message += `Sucursal: ${branch.name}\n\n`;
+  }
   message += 'Muchas gracias.';
 
   const encodedMessage = encodeURIComponent(message);
