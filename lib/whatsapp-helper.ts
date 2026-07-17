@@ -4,16 +4,22 @@ export const BRANCHES = {
   liberia: {
     name: 'Liberia',
     phone: '50684466444',
+    formattedPhone: '+506 8446 6444',
+    email: 'Libreriacrayola25@gmail.com',
     label: 'Sucursal'
   },
   bagaces: {
     name: 'Bagaces',
     phone: '50686179090',
+    formattedPhone: '+506 8617 9090',
+    email: 'libreriacrayolabagaced@gmail.com',
     label: 'Sucursal'
   },
   giovanny: {
     name: 'Giovanny',
     phone: '50688439653',
+    formattedPhone: '+506 8843 9653',
+    email: 'Libreriacrayola25@gmail.com',
     label: 'Ejecutivo de Ventas'
   }
 };
@@ -46,9 +52,13 @@ export const generateWhatsAppLink = (items: CartItem[], branchId: BranchId = 'li
   message += '-------------------------------------------\n\n';
   message += `Total de artículos: ${totalItems}\n`;
   if (branchId === 'giovanny') {
-    message += `Ejecutivo: ${branch.name}\n\n`;
+    message += `Ejecutivo: ${branch.name}\n`;
+    message += `WhatsApp: ${branch.formattedPhone}\n`;
+    message += `Correo: ${branch.email}\n\n`;
   } else {
-    message += `Sucursal: ${branch.name}\n\n`;
+    message += `Sucursal: ${branch.name}\n`;
+    message += `WhatsApp: ${branch.formattedPhone}\n`;
+    message += `Correo: ${branch.email}\n\n`;
   }
   message += 'Muchas gracias.';
 

@@ -188,7 +188,7 @@ export default function CartPage() {
               <Button 
                 variant="outline" 
                 className="w-full gap-2.5 py-4 rounded-xl font-bold border-neutral-300 bg-white hover:bg-neutral-50 hover:scale-[1.01] transition-all h-12 text-sm text-neutral-700"
-                onClick={() => generatePDF(items)}
+                onClick={() => generatePDF(items, selectedBranch)}
               >
                 <FileText className="h-4.5 w-4.5 text-neutral-500" />
                 Descargar PDF
