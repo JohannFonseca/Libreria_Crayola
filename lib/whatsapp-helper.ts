@@ -66,6 +66,47 @@ export const generateWhatsAppLink = (items: CartItem[], branchId: BranchId = 'li
   return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 };
 
+export const generateMailtoLink = (items: CartItem[], branchId: BranchId = 'liberia') => {
+  const branch = BRANCHES[branchId];
+  const emailAddress = branch.email;
+  
+  let subject = `Solicitud de Cotización - Librería Crayola (${branch.name})`;
+  
+  let body = 'Hola,\n\nMe gustaría solicitar una cotización para los siguientes productos:\n\n';
+  body += '-------------------------------------------\n';
+  body += 'DETALLE DEL PEDIDO:\n\n';
+
+  items.forEach((item) => {
+    body += `- ${item.name}\n`;
+    if (item.barcode) {
+      body += `  Código: ${item.barcode}\n`;
+    }
+    body += `  Cantidad: ${item.quantity}\n`;
+    if (item.selectedColor) {
+      body += `  Color: ${item.selectedColor}\n`;
+    }
+    body += '\n';
+  });
+
+  const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
+
+  body += '-------------------------------------------\n\n';
+  body += `Total de artículos: ${totalItems}\n`;
+  if (branchId === 'giovanny') {
+    body += `Ejecutivo de Ventas: ${branch.name}\n`;
+  } else {
+    body += `Sucursal de Atención: ${branch.name}\n`;
+  }
+  body += `WhatsApp: ${branch.formattedPhone}\n`;
+  body += `Correo: ${branch.email}\n\n`;
+  body += 'Quedo a la espera de su respuesta.\n\nMuchas gracias.';
+
+  const encodedSubject = encodeURIComponent(subject);
+  const encodedBody = encodeURIComponent(body);
+  
+  return `mailto:${emailAddress}?subject=${encodedSubject}&body=${encodedBody}`;
+};
+
 
 
 

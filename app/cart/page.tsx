@@ -2,12 +2,12 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Trash2, Plus, Minus, FileText, Send, ArrowLeft, MapPin, ShoppingBag, User } from 'lucide-react';
+import { Trash2, Plus, Minus, FileText, Send, ArrowLeft, MapPin, ShoppingBag, User, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { useCart } from '@/context/CartContext';
-import { generateWhatsAppLink, BRANCHES, BranchId } from '@/lib/whatsapp-helper';
+import { generateWhatsAppLink, generateMailtoLink, BRANCHES, BranchId } from '@/lib/whatsapp-helper';
 import { generatePDF } from '@/lib/pdf-generator';
 import { trackEvent } from '@/lib/api/analytics';
 
@@ -167,6 +167,10 @@ export default function CartPage() {
                         <div className="text-[10px] text-neutral-400 font-bold mt-0.5">
                           {BRANCHES[id].label}
                         </div>
+                        <div className="text-[9px] text-neutral-400 font-semibold mt-1.5 pt-1.5 border-t border-neutral-100/60 space-y-0.5">
+                          <div className="truncate">WhatsApp: {BRANCHES[id].formattedPhone}</div>
+                          <div className="truncate">Correo: {BRANCHES[id].email}</div>
+                        </div>
                       </div>
                     </button>
                   );
@@ -184,6 +188,16 @@ export default function CartPage() {
               >
                 <Send className="h-4.5 w-4.5 fill-white" />
                 Enviar a WhatsApp
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full gap-2.5 py-4 rounded-xl font-bold border-neutral-300 bg-white hover:bg-neutral-50 hover:scale-[1.01] transition-all h-12 text-sm text-neutral-700"
+                onClick={() => {
+                  window.location.href = generateMailtoLink(items, selectedBranch);
+                }}
+              >
+                <Mail className="h-4.5 w-4.5 text-neutral-500" />
+                Enviar por Correo
               </Button>
               <Button 
                 variant="outline" 
