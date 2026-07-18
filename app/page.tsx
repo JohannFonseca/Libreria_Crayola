@@ -94,7 +94,7 @@ export default function HomePage() {
   return (
     <div className="relative overflow-hidden bg-white">
       {/* Hero Section - Centered Layout */}
-      <section className="relative flex flex-col items-center pt-24 pb-24 overflow-hidden bg-[#fafafa]">
+      <section className="relative flex flex-col items-center pt-8 sm:pt-12 pb-24 overflow-hidden bg-[#fafafa]">
         {/* Animated Custom Decorative Background Blobs & Grid Pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none" />
         <div className="absolute top-0 inset-x-0 -z-10 h-full w-full pointer-events-none overflow-hidden">
@@ -105,34 +105,29 @@ export default function HomePage() {
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full relative z-10">
           
+          {/* Dynamic Banner Carousel */}
+          <div className="mb-8 w-full">
+            <HeroCarousel />
+          </div>
+
           {/* Letras (Heading & Description) */}
-          <div className="max-w-4xl mx-auto text-center mb-12">
+          <div className="max-w-4xl mx-auto text-center mb-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="space-y-6"
+              className="space-y-4"
             >
-              <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary/10 to-primary/5 px-4 py-2 text-xs sm:text-sm font-extrabold text-primary border border-primary/20 shadow-md backdrop-blur-sm mx-auto">
-                <Sparkles className="h-4 w-4 text-amber-500 animate-bounce" />
-                <span className="tracking-wide">Líderes en Guanacaste desde hace 5 años</span>
-              </div>
-              
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-neutral-900 leading-[1.05] max-w-3xl mx-auto">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-neutral-900 leading-[1.05] max-w-3xl mx-auto">
                 Tu proveedor de confianza <br />
                 <span className="gradient-text-crayola">en suministros.</span>
               </h1>
               
-              <p className="max-w-2xl text-lg sm:text-xl text-neutral-500 leading-relaxed font-medium mx-auto">
+              <p className="max-w-2xl text-base sm:text-lg text-neutral-500 leading-relaxed font-medium mx-auto">
                 Abastecemos su negocio, escuela u hogar con productos de la más alta calidad. 
                 Explore nuestro catálogo, cotice rápido y reciba atención personalizada en segundos.
               </p>
             </motion.div>
-          </div>
-
-          {/* Dynamic Banner Carousel */}
-          <div className="mb-14">
-            <HeroCarousel />
           </div>
 
           {/* Opciones (Buttons & Stats Grid) */}

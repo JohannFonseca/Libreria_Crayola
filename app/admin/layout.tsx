@@ -109,7 +109,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Main Content - Independent scrolling */}
         <main className="flex-1 overflow-y-auto bg-[#fafafa] relative">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none" />
-          <div className="p-6 sm:p-8 lg:p-10 max-w-[1600px] relative z-10">
+          <div className="p-6 sm:p-8 lg:p-10 max-w-[1600px] relative">
             {children}
           </div>
         </main>

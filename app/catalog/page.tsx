@@ -47,7 +47,7 @@ function CatalogContent() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
-  const [visibleCount, setVisibleCount] = useState(20);
+  const [visibleCount, setVisibleCount] = useState(30);
 
 
   useEffect(() => {
@@ -81,9 +81,9 @@ function CatalogContent() {
     }
   }, [categoryParam, searchParam, brandIdParam]);
 
-  // Reset visibleCount back to 20 whenever any search or filter state changes
+  // Reset visibleCount back to 30 whenever any search or filter state changes
   useEffect(() => {
-    setVisibleCount(20);
+    setVisibleCount(30);
   }, [searchTerm, selectedCategory, selectedBrands, minPrice, maxPrice, onlyFeatured]);
 
   const fetchProducts = async () => {
@@ -467,7 +467,7 @@ function CatalogContent() {
                   {visibleCount < filteredProducts.length && (
                     <div className="h-16 w-full flex items-center justify-center mt-6">
                       <button
-                        onClick={() => setVisibleCount((prev) => Math.min(prev + 20, filteredProducts.length))}
+                        onClick={() => setVisibleCount((prev) => Math.min(prev + 30, filteredProducts.length))}
                         className="flex items-center gap-2 text-sm font-semibold text-primary bg-white px-6 py-2.5 rounded-full border border-primary/20 shadow-sm hover:bg-primary/5 hover:shadow-md transition-all duration-200"
                       >
                         Cargar más productos

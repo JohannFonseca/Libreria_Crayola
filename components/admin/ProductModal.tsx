@@ -83,100 +83,123 @@ export const ProductModal = ({ product, categories, brands = [], onClose, onSucc
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <Card className="w-full max-w-4xl p-0 overflow-hidden animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b sticky top-0 bg-white z-10">
-          <h2 className="text-xl font-bold">{product ? 'Editar Producto' : 'Nuevo Producto'}</h2>
-          <Button variant="ghost" size="sm" onClick={onClose} disabled={loading}>
+      <Card className="w-full max-w-5xl p-0 overflow-hidden animate-in fade-in zoom-in duration-200 max-h-[90vh] flex flex-col shadow-2xl">
+        <div className="flex items-center justify-between p-5 border-b bg-white">
+          <h2 className="text-lg font-bold text-neutral-800">{product ? 'Editar Producto' : 'Nuevo Producto'}</h2>
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full" onClick={onClose} disabled={loading}>
             <X className="h-5 w-5" />
           </Button>
         </div>
 
-        <form onSubmit={handleSave} className="p-6 space-y-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium mb-1">Nombre del Producto</label>
-                  <input
-                    required
-                    className="w-full rounded-xl border border-neutral-200 px-4 py-2 focus:border-primary focus:outline-none"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-1">Categoría</label>
-                  <select
-                    className="w-full rounded-xl border border-neutral-200 px-4 py-2 focus:border-primary focus:outline-none bg-white"
-                    value={categoryId}
-                    onChange={(e) => setCategoryId(e.target.value)}
-                  >
-                    <option value="">Sin categoría</option>
-                    {categories.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-1">Marca (Opcional)</label>
-                  <select
-                    className="w-full rounded-xl border border-neutral-200 px-4 py-2 focus:border-primary focus:outline-none bg-white"
-                    value={brandId}
-                    onChange={(e) => setBrandId(e.target.value)}
-                  >
-                    <option value="">Sin marca</option>
-                    {brands.map((brand) => (
-                      <option key={brand.id} value={brand.id}>
-                        {brand.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-
-                
-
-
-                <div>
-                  <label className="block text-sm font-medium mb-1">Código de Barras (Opcional)</label>
-                  <input
-                    className="w-full rounded-xl border border-neutral-200 px-4 py-2 focus:border-primary focus:outline-none"
-                    placeholder="Ej. 7702111..."
-                    value={barcode}
-                    onChange={(e) => setBarcode(e.target.value)}
-                  />
-                </div>
+        <form onSubmit={handleSave} className="p-5 flex-1 overflow-y-auto space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            {/* Column 1 */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-neutral-700 mb-1">Nombre del Producto</label>
+                <input
+                  required
+                  placeholder="Ej. Lápiz Mongol #2"
+                  className="w-full rounded-xl border border-neutral-200 px-4 py-2 text-sm focus:border-primary focus:outline-none"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Descripción</label>
+                <label className="block text-xs font-semibold text-neutral-700 mb-1">Categoría</label>
+                <select
+                  className="w-full rounded-xl border border-neutral-200 px-4 py-2 text-sm focus:border-primary focus:outline-none bg-white"
+                  value={categoryId}
+                  onChange={(e) => setCategoryId(e.target.value)}
+                >
+                  <option value="">Sin categoría</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-neutral-700 mb-1">Marca (Opcional)</label>
+                <select
+                  className="w-full rounded-xl border border-neutral-200 px-4 py-2 text-sm focus:border-primary focus:outline-none bg-white"
+                  value={brandId}
+                  onChange={(e) => setBrandId(e.target.value)}
+                >
+                  <option value="">Sin marca</option>
+                  {brands.map((brand) => (
+                    <option key={brand.id} value={brand.id}>
+                      {brand.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Column 2 */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-neutral-700 mb-1">Precio de Venta (₡)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="Ej. 1500"
+                  className="w-full rounded-xl border border-neutral-200 px-4 py-2 text-sm focus:border-primary focus:outline-none"
+                  value={precioVenta}
+                  onChange={(e) => setPrecioVenta(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-neutral-700 mb-1">Código de Barras (Opcional)</label>
+                <input
+                  className="w-full rounded-xl border border-neutral-200 px-4 py-2 text-sm focus:border-primary focus:outline-none"
+                  placeholder="Ej. 7702111..."
+                  value={barcode}
+                  onChange={(e) => setBarcode(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-neutral-700 mb-1">Descripción</label>
                 <textarea
-                  className="w-full rounded-xl border border-neutral-200 px-4 py-2 focus:border-primary focus:outline-none min-h-[120px]"
+                  placeholder="Detalles o especificaciones del producto..."
+                  className="w-full rounded-xl border border-neutral-200 px-4 py-2 text-sm focus:border-primary focus:outline-none min-h-[82px] max-h-[82px] resize-none"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
             </div>
 
-            <div className="space-y-6">
+            {/* Column 3 */}
+            <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Imagen del Producto</label>
-                <div 
-                  className="relative aspect-square rounded-2xl border-2 border-dashed border-neutral-200 flex flex-col items-center justify-center overflow-hidden hover:border-primary transition-colors cursor-pointer bg-neutral-50"
-                  onClick={() => document.getElementById('image-upload')?.click()}
-                >
-                  {imagePreview ? (
-                    <img src={imagePreview} className="h-full w-full object-cover" />
-                  ) : (
-                    <>
-                      <Upload className="h-10 w-10 text-neutral-300 mb-2" />
-                      <span className="text-sm text-neutral-400">Click para subir</span>
-                    </>
-                  )}
+                <label className="block text-xs font-semibold text-neutral-700 mb-1">Imagen del Producto</label>
+                <div className="flex items-center gap-3.5 bg-neutral-50 p-2.5 rounded-xl border border-neutral-200">
+                  <div className="h-14 w-14 rounded-lg border border-neutral-200 bg-white flex items-center justify-center overflow-hidden flex-shrink-0 relative">
+                    {imagePreview ? (
+                      <img src={imagePreview} className="h-full w-full object-contain" />
+                    ) : (
+                      <Upload className="h-5 w-5 text-neutral-300" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-xs rounded-lg px-2.5 h-8 py-1 font-bold border-neutral-300 bg-white hover:bg-neutral-100"
+                      onClick={() => document.getElementById('image-upload')?.click()}
+                    >
+                      {imagePreview ? 'Cambiar' : 'Subir'}
+                    </Button>
+                    <p className="text-[9px] text-neutral-400 mt-0.5">Tamaño máx. 2MB</p>
+                  </div>
                   <input
                     id="image-upload"
                     type="file"
@@ -187,35 +210,34 @@ export const ProductModal = ({ product, categories, brands = [], onClose, onSucc
                 </div>
               </div>
 
-              <div className="p-4 bg-neutral-50 rounded-xl border border-neutral-200 space-y-4">
-                <h3 className="font-medium text-sm text-neutral-900 border-b pb-2">Opciones del Catálogo</h3>
-                
+              <div className="p-3 bg-neutral-50 rounded-xl border border-neutral-200 space-y-3">
                 <label className="flex items-center justify-between cursor-pointer group">
                   <div>
-                    <div className="text-sm font-medium text-neutral-900">Visible en Web</div>
-                    <div className="text-xs text-neutral-500">Aparecerá en el sitio público</div>
+                    <div className="text-xs font-semibold text-neutral-800">Visible en Web</div>
+                    <div className="text-[9px] text-neutral-400">Mostrar públicamente</div>
                   </div>
-                  <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${visible ? 'bg-green-500' : 'bg-neutral-300'}`}>
-                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${visible ? 'translate-x-6' : 'translate-x-1'}`} />
+                  <div className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${visible ? 'bg-green-500' : 'bg-neutral-300'}`}>
+                    <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${visible ? 'translate-x-5' : 'translate-x-0.5'}`} />
                   </div>
                   <input type="checkbox" className="hidden" checked={visible} onChange={(e) => setVisible(e.target.checked)} />
                 </label>
 
                 <label className="flex items-center justify-between cursor-pointer group">
                   <div>
-                    <div className="text-sm font-medium text-neutral-900">Producto Destacado</div>
-                    <div className="text-xs text-neutral-500">Mostrar en sección principal</div>
+                    <div className="text-xs font-semibold text-neutral-800">Destacado</div>
+                    <div className="text-[9px] text-neutral-400">Mostrar en el home</div>
                   </div>
-                  <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${destacado ? 'bg-primary' : 'bg-neutral-300'}`}>
-                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${destacado ? 'translate-x-6' : 'translate-x-1'}`} />
+                  <div className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${destacado ? 'bg-primary' : 'bg-neutral-300'}`}>
+                    <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${destacado ? 'translate-x-5' : 'translate-x-0.5'}`} />
                   </div>
                   <input type="checkbox" className="hidden" checked={destacado} onChange={(e) => setDestacado(e.target.checked)} />
                 </label>
               </div>
             </div>
+            
           </div>
 
-          <div className="flex justify-end gap-3 pt-6 border-t font-semibold sticky bottom-0 bg-white shadow-[0_-10px_10px_-10px_rgba(0,0,0,0.05)]">
+          <div className="flex justify-end gap-3 pt-4 border-t font-semibold bg-white">
             <Button variant="ghost" type="button" onClick={onClose} disabled={loading}>
               Cancelar
             </Button>

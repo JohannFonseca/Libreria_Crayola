@@ -13,7 +13,6 @@ import { trackEvent } from '@/lib/api/analytics';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart, totalItems } = useCart();
-  const [selectedBranch, setSelectedBranch] = React.useState<BranchId>('liberia');
 
   if (totalItems === 0) {
     return (
@@ -138,75 +137,70 @@ export default function CartPage() {
               </div>
             </div>
 
-            <div className="mb-8 space-y-3">
-              <label className="text-xs font-black uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
+            <div className="space-y-4">
+              <label className="text-xs font-black uppercase tracking-wider text-neutral-400 flex items-center gap-1.5 mb-1">
                 <MapPin className="h-4 w-4 text-primary" />
-                Enviar cotización a
+                Elija sucursal y método de envío:
               </label>
-              <div className="flex flex-col gap-2.5">
+              
+              <div className="flex flex-col gap-4">
                 {(Object.keys(BRANCHES) as BranchId[]).map((id) => {
-                  const isSelected = selectedBranch === id;
                   const Icon = id === 'giovanny' ? User : MapPin;
                   return (
-                    <button
+                    <div
                       key={id}
-                      onClick={() => setSelectedBranch(id)}
-                      className={`w-full flex items-center gap-3.5 p-3.5 text-left rounded-2xl border transition-all duration-300 hover:scale-[1.01] ${
-                        isSelected
-                          ? 'border-primary/40 bg-primary/5 text-primary shadow-sm'
-                          : 'border-neutral-200/60 bg-white text-neutral-600 hover:bg-neutral-50 hover:border-neutral-300'
-                      }`}
+                      className="w-full p-4 rounded-2xl border border-neutral-200 bg-white shadow-sm space-y-3.5"
                     >
-                      <div className={`p-2 rounded-xl transition-colors duration-300 ${isSelected ? 'bg-primary/10 text-primary' : 'bg-neutral-100 text-neutral-400'}`}>
-                        <Icon className="h-4.5 w-4.5" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs sm:text-sm font-black tracking-tight">
-                          {BRANCHES[id].name}
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-xl bg-neutral-100 text-neutral-500">
+                          <Icon className="h-4.5 w-4.5" />
                         </div>
-                        <div className="text-[10px] text-neutral-400 font-bold mt-0.5">
-                          {BRANCHES[id].label}
-                        </div>
-                        <div className="text-[9px] text-neutral-400 font-semibold mt-1.5 pt-1.5 border-t border-neutral-100/60 space-y-0.5">
-                          <div className="truncate">WhatsApp: {BRANCHES[id].formattedPhone}</div>
-                          <div className="truncate">Correo: {BRANCHES[id].email}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-black tracking-tight text-neutral-800">
+                            {id === 'giovanny' ? `Ejecutivo: ${BRANCHES[id].name}` : `Sucursal: ${BRANCHES[id].name}`}
+                          </div>
+                          <div className="text-[10px] text-neutral-400 font-extrabold uppercase tracking-wide">
+                            {BRANCHES[id].label}
+                          </div>
                         </div>
                       </div>
-                    </button>
+
+                      <div className="space-y-2">
+                        <Button 
+                          className="w-full gap-2 py-2.5 rounded-xl font-bold bg-[#25D366] text-white hover:bg-[#20ba59] border-none shadow-sm flex items-center justify-center h-10 text-xs transition-transform active:scale-95" 
+                          onClick={() => {
+                            items.forEach(item => trackEvent(item.id, 'send_whatsapp'));
+                            window.location.href = generateWhatsAppLink(items, id);
+                          }}
+                        >
+                          <Send className="h-3.5 w-3.5 fill-white" />
+                          Enviar por WhatsApp
+                        </Button>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button 
+                            variant="outline" 
+                            className="w-full gap-1.5 py-2 rounded-xl font-bold border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 h-9 text-[11px] transition-transform active:scale-95"
+                            onClick={() => {
+                              window.location.href = generateMailtoLink(items, id);
+                            }}
+                          >
+                            <Mail className="h-3.5 w-3.5 text-neutral-400" />
+                            Por Correo
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            className="w-full gap-1.5 py-2 rounded-xl font-bold border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 h-9 text-[11px] transition-transform active:scale-95"
+                            onClick={() => generatePDF(items, id)}
+                          >
+                            <FileText className="h-3.5 w-3.5 text-neutral-400" />
+                            Bajar PDF
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   );
                 })}
               </div>
-            </div>
-
-            <div className="space-y-3">
-              <Button 
-                className="w-full gap-2.5 py-4 rounded-xl font-bold bg-[#25D366] text-white hover:bg-[#20ba59] border-none shadow-md shadow-emerald-500/10 hover:shadow-emerald-500/20 hover:scale-[1.01] transition-all h-12 text-sm" 
-                onClick={() => {
-                  items.forEach(item => trackEvent(item.id, 'send_whatsapp'));
-                  window.location.href = generateWhatsAppLink(items, selectedBranch);
-                }}
-              >
-                <Send className="h-4.5 w-4.5 fill-white" />
-                Enviar a WhatsApp
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full gap-2.5 py-4 rounded-xl font-bold border-neutral-300 bg-white hover:bg-neutral-50 hover:scale-[1.01] transition-all h-12 text-sm text-neutral-700"
-                onClick={() => {
-                  window.location.href = generateMailtoLink(items, selectedBranch);
-                }}
-              >
-                <Mail className="h-4.5 w-4.5 text-neutral-500" />
-                Enviar por Correo
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full gap-2.5 py-4 rounded-xl font-bold border-neutral-300 bg-white hover:bg-neutral-50 hover:scale-[1.01] transition-all h-12 text-sm text-neutral-700"
-                onClick={() => generatePDF(items, selectedBranch)}
-              >
-                <FileText className="h-4.5 w-4.5 text-neutral-500" />
-                Descargar PDF
-              </Button>
             </div>
 
             <p className="mt-6 text-[10px] text-neutral-400 text-center leading-normal font-medium max-w-xs mx-auto">
