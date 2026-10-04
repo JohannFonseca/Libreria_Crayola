@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Package, Tag, BarChart3, LogOut, ChevronRight, Award } from 'lucide-react';
+import { LayoutDashboard, Package, Tag, BarChart3, LogOut, ChevronRight, Award, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { getSession, logoutAdmin } from '@/lib/api/auth';
 
@@ -110,6 +110,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <main className="flex-1 overflow-y-auto bg-[#fafafa] relative">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none" />
           <div className="p-6 sm:p-8 lg:p-10 max-w-[1600px] relative">
+            <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50/90 p-4 text-amber-900 shadow-sm backdrop-blur-sm">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-bold text-sm text-amber-900">Subida de imágenes bloqueada por límite de cuota</h3>
+                  <p className="text-xs text-amber-700 mt-1">
+                    Para evitar exceder los límites de Vercel y almacenamiento, se ha deshabilitado la subida de nuevas imágenes en el administrador. Las imágenes existentes del catálogo y carrusel se mantienen intactas y puedes seguir gestionando precios, estados y datos con normalidad.
+                  </p>
+                </div>
+              </div>
+            </div>
             {children}
           </div>
         </main>

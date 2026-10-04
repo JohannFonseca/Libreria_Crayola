@@ -6,15 +6,15 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const IMAGES = [
   {
-    src: '/carrusel-1.png',
+    src: '/carrusel-1.jpg',
     alt: 'Banner Promocional 1'
   },
   {
-    src: '/carrusel-2.png',
+    src: '/carrusel-2.jpg',
     alt: 'Banner Promocional 2'
   },
   {
-    src: '/carrusel-3.png',
+    src: '/carrusel-3.jpg',
     alt: 'Banner Promocional 3'
   }
 ];

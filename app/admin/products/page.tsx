@@ -121,16 +121,19 @@ export default function AdminProductsPage() {
           <h1 className="text-3xl font-bold tracking-tight">Inventario de Productos</h1>
           <p className="text-neutral-500 mt-1">Activa y configura qué productos se muestran en el catálogo público.</p>
         </div>
-        <Button 
-          className="gap-2 rounded-xl h-11 px-6 shadow-sm"
-          onClick={() => {
-            setEditingProduct(undefined);
-            setShowModal(true);
-          }}
-        >
-          <Plus className="h-5 w-5" />
-          Nuevo Producto
-        </Button>
+        <div className="flex flex-col items-end gap-1">
+          <Button 
+            className="gap-2 rounded-xl h-11 px-6 shadow-sm"
+            onClick={() => {
+              setEditingProduct(undefined);
+              setShowModal(true);
+            }}
+          >
+            <Plus className="h-5 w-5" />
+            Nuevo Producto
+          </Button>
+          <span className="text-[11px] text-amber-600 font-medium">⚠️ Subida de imágenes desactivada</span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

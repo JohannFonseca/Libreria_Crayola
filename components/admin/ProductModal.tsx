@@ -46,11 +46,8 @@ export const ProductModal = ({ product, categories, brands = [], onClose, onSucc
     setLoading(true);
 
     try {
-      let imageUrl = product?.image_url || '';
-
-      if (imageFile) {
-        imageUrl = await uploadImage(imageFile);
-      }
+      // No se suben nuevas imágenes para no exceder cuotas de Vercel/Supabase
+      const imageUrl = product?.image_url || '';
 
       const productData = {
         name,
@@ -180,33 +177,32 @@ export const ProductModal = ({ product, categories, brands = [], onClose, onSucc
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-neutral-700 mb-1">Imagen del Producto</label>
-                <div className="flex items-center gap-3.5 bg-neutral-50 p-2.5 rounded-xl border border-neutral-200">
-                  <div className="h-14 w-14 rounded-lg border border-neutral-200 bg-white flex items-center justify-center overflow-hidden flex-shrink-0 relative">
-                    {imagePreview ? (
-                      <img src={imagePreview} className="h-full w-full object-contain" />
-                    ) : (
-                      <Upload className="h-5 w-5 text-neutral-300" />
-                    )}
+                <div className="flex flex-col gap-2 bg-neutral-50 p-2.5 rounded-xl border border-neutral-200">
+                  <div className="flex items-center gap-3.5">
+                    <div className="h-14 w-14 rounded-lg border border-neutral-200 bg-white flex items-center justify-center overflow-hidden flex-shrink-0 relative">
+                      {imagePreview ? (
+                        <img src={imagePreview} className="h-full w-full object-contain" />
+                      ) : (
+                        <Upload className="h-5 w-5 text-neutral-300" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm" 
+                        disabled
+                        className="text-xs rounded-lg px-2.5 h-8 py-1 font-bold border-neutral-300 bg-neutral-100 text-neutral-400 cursor-not-allowed"
+                        title="Subida de imágenes bloqueada para no exceder cuotas de Vercel/almacenamiento"
+                      >
+                        Subida Bloqueada
+                      </Button>
+                      <p className="text-[10px] text-amber-600 font-medium mt-1">Límite alcanzado: no se pueden subir más imágenes.</p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      size="sm" 
-                      className="text-xs rounded-lg px-2.5 h-8 py-1 font-bold border-neutral-300 bg-white hover:bg-neutral-100"
-                      onClick={() => document.getElementById('image-upload')?.click()}
-                    >
-                      {imagePreview ? 'Cambiar' : 'Subir'}
-                    </Button>
-                    <p className="text-[9px] text-neutral-400 mt-0.5">Tamaño máx. 2MB</p>
-                  </div>
-                  <input
-                    id="image-upload"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleImageChange}
-                  />
+                  <span className="text-[10px] text-neutral-500 bg-white border border-neutral-200/80 rounded-lg p-1.5">
+                    💡 Las imágenes ya asignadas se mantienen intactas. Puedes modificar nombre, precio, categoría y estado.
+                  </span>
                 </div>
               </div>
 
@@ -241,9 +237,13 @@ export const ProductModal = ({ product, categories, brands = [], onClose, onSucc
             <Button variant="ghost" type="button" onClick={onClose} disabled={loading}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading} className="gap-2 min-w-[120px]">
+            <Button 
+              type="submit" 
+              disabled={loading} 
+              className="gap-2 min-w-[120px]"
+            >
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-              {product ? 'Guardar Cambios' : 'Crear Producto'}
+              {product ? 'Guardar Cambios' : 'Crear Producto (Sin Imagen)'}
             </Button>
           </div>
         </form>

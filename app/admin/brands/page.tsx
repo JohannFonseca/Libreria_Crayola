@@ -244,7 +244,7 @@ export default function AdminBrandsPage() {
 
               <div>
                 <label className="block text-xs font-black uppercase tracking-wider text-neutral-500 mb-2">Logo de la Marca</label>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {logoUrl ? (
                     <div className="relative h-28 w-28 rounded-2xl border border-neutral-200 p-2 bg-neutral-50 flex items-center justify-center group overflow-hidden">
                       <img src={logoUrl} alt="Logo Preview" className="max-h-full max-w-full object-contain" />
@@ -257,32 +257,12 @@ export default function AdminBrandsPage() {
                       </button>
                     </div>
                   ) : (
-                    <label className="flex flex-col items-center justify-center h-28 w-full border-2 border-dashed border-neutral-200 rounded-2xl cursor-pointer hover:bg-neutral-50 hover:border-primary/55 transition-all text-neutral-400">
-                      {uploadingImage ? (
-                        <div className="h-6 w-6 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
-                      ) : (
-                        <>
-                          <Upload className="h-6 w-6 mb-1 text-neutral-400" />
-                          <span className="text-xs font-extrabold">Subir Logotipo</span>
-                          <span className="text-[10px] font-bold text-neutral-400 mt-0.5">JPG, PNG</span>
-                        </>
-                      )}
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleImageUpload}
-                        disabled={uploadingImage}
-                      />
-                    </label>
+                    <div className="flex flex-col items-center justify-center p-4 border border-dashed border-neutral-300 rounded-2xl bg-neutral-50 text-center">
+                      <Upload className="h-6 w-6 text-neutral-300 mb-1" />
+                      <span className="text-xs font-bold text-neutral-500">Subida de imágenes deshabilitada</span>
+                      <span className="text-[10px] text-amber-600 font-medium mt-0.5">Se alcanzó el límite del servidor. Puedes usar colores representativos.</span>
+                    </div>
                   )}
-                  <input
-                    type="text"
-                    placeholder="O ingresa URL de la imagen..."
-                    className="w-full rounded-xl border border-neutral-200 px-4 py-2.5 text-xs focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all font-semibold"
-                    value={logoUrl}
-                    onChange={(e) => setLogoUrl(e.target.value)}
-                  />
                 </div>
               </div>
 
@@ -301,7 +281,10 @@ export default function AdminBrandsPage() {
               </div>
 
               <div className="flex gap-3 pt-2">
-                <Button type="submit" className="flex-1 font-extrabold h-11 rounded-xl">
+                <Button 
+                  type="submit" 
+                  className="flex-1 font-extrabold h-11 rounded-xl"
+                >
                   {editingId ? 'Guardar Cambios' : 'Agregar Marca'}
                 </Button>
                 {editingId && (
