@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search, Trash2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Product } from '@/lib/types';
@@ -19,6 +19,8 @@ export default function AdminProductsPage() {
   const [totalCount, setTotalCount] = React.useState(0);
   const [dbTotal, setDbTotal] = React.useState(0);
   const [dbVisibles, setDbVisibles] = React.useState(0);
+  const [emptyHiddenCount, setEmptyHiddenCount] = React.useState(0);
+  const [isCleaning, setIsCleaning] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'visibles' | 'ocultos'>('todos');
   const [brandFilter, setBrandFilter] = React.useState<string>('todas');
@@ -36,8 +38,10 @@ export default function AdminProductsPage() {
   const fetchAbsoluteTotals = async () => {
     const { count: total } = await supabase.from('products').select('*', { count: 'exact', head: true });
     const { count: visibles } = await supabase.from('products').select('*', { count: 'exact', head: true }).eq('visible_en_web', true);
+    const { count: emptyHidden } = await supabase.from('products').select('*', { count: 'exact', head: true }).eq('visible_en_web', false).is('image_url', null);
     setDbTotal(total || 0);
     setDbVisibles(visibles || 0);
+    setEmptyHiddenCount(emptyHidden || 0);
   };
 
   // Debounce search
@@ -97,6 +101,35 @@ export default function AdminProductsPage() {
     }
   };
 
+  const handleCleanEmptyProducts = async () => {
+    const confirmDelete = window.confirm(
+      `¿Deseas eliminar permanentemente los ${emptyHiddenCount} productos inactivos sin fotos de la base de datos?\n\n` +
+      `• Se eliminarán únicamente los productos ocultos sin imagen que no se usan en la tienda web.\n` +
+      `• Los ${dbVisibles} productos con fotos activos en el catálogo permanecerán 100% intactos.\n\n` +
+      `Esta acción aligerará significativamente la base de datos de la librería.`
+    );
+    if (!confirmDelete) return;
+
+    setIsCleaning(true);
+    try {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('visible_en_web', false)
+        .is('image_url', null);
+
+      if (error) throw error;
+      alert(`¡Limpieza completada con éxito! Se aligeró la base de datos.`);
+      await fetchAbsoluteTotals();
+      await fetchProducts();
+    } catch (err: any) {
+      console.error('Error al depurar productos:', err);
+      alert('Error al depurar la base de datos: ' + (err.message || 'Verifica tus permisos de administrador'));
+    } finally {
+      setIsCleaning(false);
+    }
+  };
+
   const handleInlineUpdate = async (id: string, updates: Partial<Product>) => {
     try {
       const updated = await updateProductInline(id, updates);
@@ -121,7 +154,7 @@ export default function AdminProductsPage() {
           <h1 className="text-3xl font-bold tracking-tight">Inventario de Productos</h1>
           <p className="text-neutral-500 mt-1">Activa y configura qué productos se muestran en el catálogo público.</p>
         </div>
-        <div className="flex flex-col items-end gap-1">
+        <div className="flex flex-col items-end gap-1.5">
           <Button 
             className="gap-2 rounded-xl h-11 px-6 shadow-sm"
             onClick={() => {
@@ -132,9 +165,41 @@ export default function AdminProductsPage() {
             <Plus className="h-5 w-5" />
             Nuevo Producto
           </Button>
-          <span className="text-[11px] text-amber-600 font-medium">⚠️ Subida de imágenes desactivada</span>
+          <span className="text-[11px] text-amber-800 font-bold bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-lg flex items-center gap-1">
+            ⚠️ Límite de fotos alcanzado
+          </span>
         </div>
       </div>
+
+      {emptyHiddenCount > 0 && (
+        <div className="rounded-2xl border border-red-200 bg-red-50/80 p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
+          <div className="flex items-start gap-3.5">
+            <div className="p-2.5 bg-red-100 text-red-600 rounded-xl">
+              <Trash2 className="h-5 w-5" />
+            </div>
+            <div>
+              <h4 className="font-bold text-sm text-red-950 flex items-center gap-2">
+                <span>Aligerar Base de Datos ({emptyHiddenCount} productos inactivos sin fotos)</span>
+                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-red-200 text-red-800">
+                  Ocupa espacio
+                </span>
+              </h4>
+              <p className="text-xs text-red-700 mt-1 leading-relaxed max-w-3xl">
+                Se detectaron {emptyHiddenCount} productos ocultos que no tienen fotos ni se muestran en el catálogo web (son registros antiguos que hacen pesada la base de datos). Puedes eliminarlos de forma segura: tus {dbVisibles} productos con fotos permanecerán intactos.
+              </p>
+            </div>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={isCleaning}
+            onClick={handleCleanEmptyProducts}
+            className="border-red-300 bg-white hover:bg-red-100 text-red-700 font-bold text-xs rounded-xl h-10 px-5 whitespace-nowrap self-end md:self-center shadow-xs transition-all"
+          >
+            {isCleaning ? 'Eliminando registros...' : `Eliminar ${emptyHiddenCount} productos inactivos`}
+          </Button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6 border-neutral-200">

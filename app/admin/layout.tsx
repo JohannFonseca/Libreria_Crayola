@@ -110,13 +110,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <main className="flex-1 overflow-y-auto bg-[#fafafa] relative">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none" />
           <div className="p-6 sm:p-8 lg:p-10 max-w-[1600px] relative">
-            <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50/90 p-4 text-amber-900 shadow-sm backdrop-blur-sm">
+            <div className="mb-6 rounded-2xl border border-amber-300 bg-amber-50/95 p-4 text-amber-950 shadow-sm backdrop-blur-sm">
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-bold text-sm text-amber-900">Subida de imágenes bloqueada por límite de cuota</h3>
-                  <p className="text-xs text-amber-700 mt-1">
-                    Para evitar exceder los límites de Vercel y almacenamiento, se ha deshabilitado la subida de nuevas imágenes en el administrador. Las imágenes existentes del catálogo y carrusel se mantienen intactas y puedes seguir gestionando precios, estados y datos con normalidad.
+                  <h3 className="font-bold text-sm text-amber-900 flex items-center gap-2">
+                    <span>⚠️ Límite de fotos alcanzado (Cuota del servidor / Vercel)</span>
+                    <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-200/80 text-amber-800 border border-amber-300">
+                      5.2K / 5K fotos
+                    </span>
+                  </h3>
+                  <p className="text-xs text-amber-800 mt-1 leading-relaxed">
+                    Se alcanzó el límite mensual de fotos en el servidor. La subida de nuevas imágenes está deshabilitada temporalmente para proteger el servicio. Las fotos existentes de los productos se mantienen intactas y puedes seguir modificando precios, nombres, categorías y estados con total normalidad.
                   </p>
                 </div>
               </div>

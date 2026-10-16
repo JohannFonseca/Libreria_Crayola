@@ -192,16 +192,18 @@ export const ProductModal = ({ product, categories, brands = [], onClose, onSucc
                         variant="outline" 
                         size="sm" 
                         disabled
-                        className="text-xs rounded-lg px-2.5 h-8 py-1 font-bold border-neutral-300 bg-neutral-100 text-neutral-400 cursor-not-allowed"
-                        title="Subida de imágenes bloqueada para no exceder cuotas de Vercel/almacenamiento"
+                        className="text-xs rounded-lg px-2.5 h-8 py-1 font-bold border-amber-300 bg-amber-50 text-amber-700 cursor-not-allowed"
+                        title="Límite de fotos alcanzado en el servidor"
                       >
-                        Subida Bloqueada
+                        Límite de Fotos Alcanzado
                       </Button>
-                      <p className="text-[10px] text-amber-600 font-medium mt-1">Límite alcanzado: no se pueden subir más imágenes.</p>
+                      <p className="text-[11px] text-amber-700 font-semibold mt-1">
+                        ⚠️ Se alcanzó el límite de fotos del servidor. No se pueden subir fotos nuevas.
+                      </p>
                     </div>
                   </div>
-                  <span className="text-[10px] text-neutral-500 bg-white border border-neutral-200/80 rounded-lg p-1.5">
-                    💡 Las imágenes ya asignadas se mantienen intactas. Puedes modificar nombre, precio, categoría y estado.
+                  <span className="text-[10px] text-neutral-600 bg-white border border-amber-200 rounded-lg p-2 leading-relaxed">
+                    💡 Las imágenes existentes de tus productos se conservan activas. Puedes guardar y modificar el nombre, precio, categoría y estado normalmente.
                   </span>
                 </div>
               </div>
