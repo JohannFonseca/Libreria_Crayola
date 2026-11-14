@@ -25,6 +25,7 @@ export const ProductModal = ({ product, categories, brands = [], onClose, onSucc
   const [visible, setVisible] = React.useState(product?.visible_en_web || false);
   const [destacado, setDestacado] = React.useState(product?.destacado || false);
   const [barcode, setBarcode] = React.useState(product?.barcode || '');
+  const [imageUrlInput, setImageUrlInput] = React.useState(product?.image_url || '');
   const [imageFile, setImageFile] = React.useState<File | null>(null);
   const [imagePreview, setImagePreview] = React.useState(product?.image_url || '');
   const [loading, setLoading] = React.useState(false);
@@ -46,8 +47,7 @@ export const ProductModal = ({ product, categories, brands = [], onClose, onSucc
     setLoading(true);
 
     try {
-      // No se suben nuevas imágenes para no exceder cuotas de Vercel/Supabase
-      const imageUrl = product?.image_url || '';
+      const imageUrl = imageUrlInput.trim() || product?.image_url || null;
 
       const productData = {
         name,
@@ -180,30 +180,35 @@ export const ProductModal = ({ product, categories, brands = [], onClose, onSucc
                 <div className="flex flex-col gap-2 bg-neutral-50 p-2.5 rounded-xl border border-neutral-200">
                   <div className="flex items-center gap-3.5">
                     <div className="h-14 w-14 rounded-lg border border-neutral-200 bg-white flex items-center justify-center overflow-hidden flex-shrink-0 relative">
-                      {imagePreview ? (
-                        <img src={imagePreview} className="h-full w-full object-contain" />
+                      {imageUrlInput || imagePreview ? (
+                        <img 
+                          src={imageUrlInput || imagePreview} 
+                          alt="Preview" 
+                          className="h-full w-full object-contain" 
+                          onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                        />
                       ) : (
                         <Upload className="h-5 w-5 text-neutral-300" />
                       )}
                     </div>
-                    <div className="flex-1">
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        size="sm" 
-                        disabled
-                        className="text-xs rounded-lg px-2.5 h-8 py-1 font-bold border-amber-300 bg-amber-50 text-amber-700 cursor-not-allowed"
-                        title="Límite de fotos alcanzado en el servidor"
-                      >
-                        Límite de Fotos Alcanzado
-                      </Button>
-                      <p className="text-[11px] text-amber-700 font-semibold mt-1">
-                        ⚠️ Se alcanzó el límite de fotos del servidor. No se pueden subir fotos nuevas.
-                      </p>
+                    <div className="flex-1 space-y-1">
+                      <label className="text-[10px] font-bold text-neutral-600 block">
+                        Ruta o URL de Imagen
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Ej. /products/mi-foto.webp o https://..."
+                        value={imageUrlInput}
+                        onChange={(e) => {
+                          setImageUrlInput(e.target.value);
+                          setImagePreview(e.target.value);
+                        }}
+                        className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-neutral-300 bg-white font-mono focus:border-primary focus:outline-none"
+                      />
                     </div>
                   </div>
-                  <span className="text-[10px] text-neutral-600 bg-white border border-amber-200 rounded-lg p-2 leading-relaxed">
-                    💡 Las imágenes existentes de tus productos se conservan activas. Puedes guardar y modificar el nombre, precio, categoría y estado normalmente.
+                  <span className="text-[10px] text-neutral-500 bg-white border border-neutral-200 rounded-lg p-2 leading-relaxed">
+                    💡 Puedes asignar imágenes locales optimizadas de <code className="text-primary font-bold">/products/...</code> o URLs públicas externas directamente.
                   </span>
                 </div>
               </div>

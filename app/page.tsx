@@ -12,6 +12,7 @@ import { LocationsSection } from '@/components/layout/LocationsSection';
 import { BrandsSection } from '@/components/layout/BrandsSection';
 import { HeroCarousel } from '@/components/layout/HeroCarousel';
 import { ProductDetail } from '@/components/catalog/ProductDetail';
+import { FeaturedSection } from '@/components/catalog/FeaturedSection';
 import { supabase } from '@/lib/supabaseClient';
 import { Category, Product } from '@/lib/types';
 import { getPublicProducts } from '@/lib/api/products';
@@ -80,11 +81,16 @@ export default function HomePage() {
     }
   };
 
-  const handleAddToCart = (product: Product, color?: string) => {
+  const handleAddToCart = (product: Product, color?: string, quantity?: number) => {
     trackEvent(product.id, 'add_to_cart');
-    addItem(product, color);
+    addItem(product, color, quantity);
     setSelectedProduct(null);
   };
+
+  const showcaseProducts = React.useMemo(() => {
+    const featured = products.filter(p => p.destacado);
+    return featured.length > 0 ? featured : products.slice(0, 8);
+  }, [products]);
 
   const handleViewProduct = (product: Product) => {
     trackEvent(product.id, 'view_product');
@@ -174,6 +180,22 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Featured Products Section - Standout Showcase */}
+      {showcaseProducts.length > 0 && (
+        <section className="py-20 bg-white border-b border-neutral-100">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FeaturedSection 
+              products={showcaseProducts}
+              onViewDetail={handleViewProduct}
+              onAddToCart={(p) => handleAddToCart(p)}
+              title="Lo Más Destacado en Librería Crayola"
+              subtitle="Nuestra selección de productos recomendados para oficinas, centros educativos y proyectos creativos"
+              showAllLink={true}
+            />
+          </div>
+        </section>
+      )}
 
       {/* Brands Section */}
       <BrandsSection 

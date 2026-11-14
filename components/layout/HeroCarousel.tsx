@@ -1,21 +1,35 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const IMAGES = [
   {
     src: '/carrusel-1.jpg',
-    alt: 'Banner Promocional 1'
+    alt: 'Norma y Kiut - Novedades escolares y papelería',
+    href: '/catalog?category=Escolar'
   },
   {
     src: '/carrusel-2.jpg',
-    alt: 'Banner Promocional 2'
+    alt: 'Resistol Ferretero - Adhesivos y pegamentos industriales',
+    href: '/catalog?brandId=983d2b51-0244-448e-94a6-c5af3f8d1aa3'
   },
   {
     src: '/carrusel-3.jpg',
-    alt: 'Banner Promocional 3'
+    alt: 'Casio - Variedad de calculadoras científicas y de oficina',
+    href: '/catalog?search=calculadora'
+  },
+  {
+    src: '/carrusel-4.jpg',
+    alt: 'Faber-Castell y Artline - Arte y escritura profesional',
+    href: '/catalog?brandId=e962e3f4-0311-4cce-891a-0d526656202a'
+  },
+  {
+    src: '/carrusel-5.jpg',
+    alt: 'Crayola Oficial - Creatividad, colores y témperas',
+    href: '/catalog?brandId=3ec216f3-bd2f-476c-9352-87a6258acad2'
   }
 ];
 
@@ -68,6 +82,8 @@ export const HeroCarousel = () => {
     };
   }, [handleNext, currentIndex]);
 
+  const activeImage = IMAGES[currentIndex];
+
   return (
     <div className="relative w-full overflow-hidden rounded-2xl md:rounded-3xl border border-neutral-100 shadow-[0_15px_40px_rgba(0,0,0,0.06)] group bg-neutral-50 aspect-[2/1] md:aspect-[3024/748]">
       {/* Slides Container */}
@@ -86,12 +102,14 @@ export const HeroCarousel = () => {
             }}
             className="absolute inset-0 w-full h-full"
           >
-            <img
-              src={IMAGES[currentIndex].src}
-              alt={IMAGES[currentIndex].alt}
-              className="w-full h-full object-cover select-none"
-              draggable="false"
-            />
+            <Link href={activeImage.href} className="block w-full h-full cursor-pointer">
+              <img
+                src={activeImage.src}
+                alt={activeImage.alt}
+                className="w-full h-full object-cover select-none transition-transform duration-500 hover:scale-[1.01]"
+                draggable="false"
+              />
+            </Link>
           </motion.div>
         </AnimatePresence>
       </div>

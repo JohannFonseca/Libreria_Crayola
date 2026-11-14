@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: Product, color?: string) => void;
+  addItem: (product: Product, color?: string, quantity?: number) => void;
   removeItem: (id: string, color?: string) => void;
   updateQuantity: (id: string, quantity: number, color?: string) => void;
   clearCart: () => void;
@@ -44,7 +44,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [items, isInitialized]);
 
-  const addItem = (product: Product, color?: string) => {
+  const addItem = (product: Product, color?: string, quantity: number = 1) => {
+    const qtyToAdd = Math.max(1, quantity);
     setItems((prev) => {
       const existingItem = prev.find(
         (item) => item.id === product.id && item.selectedColor === color
@@ -53,15 +54,18 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       if (existingItem) {
         return prev.map((item) =>
           item.id === product.id && item.selectedColor === color
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + qtyToAdd }
             : item
         );
       }
 
-      return [...prev, { ...product, quantity: 1, selectedColor: color }];
+      return [...prev, { ...product, quantity: qtyToAdd, selectedColor: color }];
     });
 
-    setLastAddedItem({ name: product.name, image: product.image_url });
+    setLastAddedItem({ 
+      name: qtyToAdd > 1 ? `(${qtyToAdd}) ${product.name}` : product.name, 
+      image: product.image_url 
+    });
     setShowToast(true);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => setShowToast(false), 4000);

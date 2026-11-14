@@ -1,4 +1,5 @@
 import { CartItem } from './types';
+import { formatCRC } from './formatters';
 
 export const BRANCHES = {
   liberia: {
@@ -31,16 +32,28 @@ export const generateWhatsAppLink = (items: CartItem[], branchId: BranchId = 'li
   const phoneNumber = branch.phone;
   
   let message = '*Cotización - Librería Crayola*\n\n';
-  message += 'Hola, me gustaría solicitar una cotización para los siguientes productos:\n\n';
+  message += 'Hola, me gustaría solicitar una cotización formal para los siguientes productos:\n\n';
   message += '-------------------------------------------\n';
   message += 'DETALLE DEL PEDIDO:\n\n';
 
+  let totalPrice = 0;
+  let hasPrices = false;
+
   items.forEach((item) => {
+    const itemPrice = item.precio_venta;
+    let priceText = '';
+    if (itemPrice && itemPrice > 0) {
+      hasPrices = true;
+      const subtotal = itemPrice * item.quantity;
+      totalPrice += subtotal;
+      priceText = ` | ${formatCRC(itemPrice)} c/u = *${formatCRC(subtotal)}*`;
+    }
+
     message += `- *${item.name}*\n`;
+    message += `  Cantidad: ${item.quantity}${priceText}\n`;
     if (item.barcode) {
       message += `  Código: ${item.barcode}\n`;
     }
-    message += `  Cantidad: ${item.quantity}\n`;
     if (item.selectedColor) {
       message += `  Color: ${item.selectedColor}\n`;
     }
@@ -49,18 +62,23 @@ export const generateWhatsAppLink = (items: CartItem[], branchId: BranchId = 'li
 
   const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
 
-  message += '-------------------------------------------\n\n';
-  message += `Total de artículos: ${totalItems}\n`;
+  message += '-------------------------------------------\n';
+  message += `Total de artículos: ${totalItems} unidades\n`;
+  if (hasPrices && totalPrice > 0) {
+    message += `*Total estimado:* ${formatCRC(totalPrice)} (IVA incl.)\n`;
+  }
+  message += '\n';
+
   if (branchId === 'giovanny') {
     message += `Ejecutivo: ${branch.name}\n`;
     message += `WhatsApp: ${branch.formattedPhone}\n`;
     message += `Correo: ${branch.email}\n\n`;
   } else {
-    message += `Sucursal: ${branch.name}\n`;
+    message += `Sucursal de Retiro/Atención: ${branch.name}\n`;
     message += `WhatsApp: ${branch.formattedPhone}\n`;
     message += `Correo: ${branch.email}\n\n`;
   }
-  message += 'Muchas gracias.';
+  message += 'Quedo atento a la confirmación de existencias. ¡Muchas gracias!';
 
   const encodedMessage = encodeURIComponent(message);
   return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
@@ -70,18 +88,30 @@ export const generateMailtoLink = (items: CartItem[], branchId: BranchId = 'libe
   const branch = BRANCHES[branchId];
   const emailAddress = branch.email;
   
-  let subject = `Solicitud de Cotización - Librería Crayola (${branch.name})`;
+  const subject = `Solicitud de Cotización - Librería Crayola (${branch.name})`;
   
-  let body = 'Hola,\n\nMe gustaría solicitar una cotización para los siguientes productos:\n\n';
+  let body = 'Hola,\n\nMe gustaría solicitar una cotización formal para los siguientes productos:\n\n';
   body += '-------------------------------------------\n';
   body += 'DETALLE DEL PEDIDO:\n\n';
 
+  let totalPrice = 0;
+  let hasPrices = false;
+
   items.forEach((item) => {
+    const itemPrice = item.precio_venta;
+    let priceText = '';
+    if (itemPrice && itemPrice > 0) {
+      hasPrices = true;
+      const subtotal = itemPrice * item.quantity;
+      totalPrice += subtotal;
+      priceText = ` | ${formatCRC(itemPrice)} c/u = ${formatCRC(subtotal)}`;
+    }
+
     body += `- ${item.name}\n`;
+    body += `  Cantidad: ${item.quantity}${priceText}\n`;
     if (item.barcode) {
       body += `  Código: ${item.barcode}\n`;
     }
-    body += `  Cantidad: ${item.quantity}\n`;
     if (item.selectedColor) {
       body += `  Color: ${item.selectedColor}\n`;
     }
@@ -90,8 +120,13 @@ export const generateMailtoLink = (items: CartItem[], branchId: BranchId = 'libe
 
   const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
 
-  body += '-------------------------------------------\n\n';
-  body += `Total de artículos: ${totalItems}\n`;
+  body += '-------------------------------------------\n';
+  body += `Total de artículos: ${totalItems} unidades\n`;
+  if (hasPrices && totalPrice > 0) {
+    body += `Total estimado: ${formatCRC(totalPrice)} (IVA incl.)\n`;
+  }
+  body += '\n';
+
   if (branchId === 'giovanny') {
     body += `Ejecutivo de Ventas: ${branch.name}\n`;
   } else {
@@ -103,10 +138,5 @@ export const generateMailtoLink = (items: CartItem[], branchId: BranchId = 'libe
 
   const encodedSubject = encodeURIComponent(subject);
   const encodedBody = encodeURIComponent(body);
-  
   return `mailto:${emailAddress}?subject=${encodedSubject}&body=${encodedBody}`;
 };
-
-
-
-
