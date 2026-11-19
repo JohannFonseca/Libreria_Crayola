@@ -128,7 +128,7 @@ export const ProductCard = ({ product, onViewDetail, onAddToCart }: ProductCardP
           <div className="flex items-baseline justify-between mb-3">
             <div className="flex flex-col">
               <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-400 leading-none">
-                {hasPrice ? 'Precio venta' : 'Cotización'}
+                {hasPrice ? 'Precio por unidad' : 'Cotización'}
               </span>
               <span className="text-base sm:text-lg font-black text-neutral-950 tracking-tight leading-none mt-1">
                 {formatCRC(product.precio_venta)}
